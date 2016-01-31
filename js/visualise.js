@@ -167,9 +167,6 @@ function drawNodes(nodes, parent) {
 			y: node.position.y+(node.size/2)
 		};
 
-		// Draw the node
-		canvasContext.rect(node.position.x, node.position.y, node.size, node.size);
-
 		// Draw the HTML element mask
 		drawHTMLNode(node);
 
@@ -186,6 +183,12 @@ function drawNodes(nodes, parent) {
 		if (typeof node.subnodes !== 'undefined') {
 			drawNodes(node.subnodes, node);
 		}
+
+		// Draw the node
+		canvasContext.rect(node.position.x, node.position.y, node.size, node.size);
+		canvasContext.fillStyle = '#333';
+		canvasContext.stroke();
+		canvasContext.fill();
 
 	}
 
