@@ -17,7 +17,7 @@ function drawNodes(nodes, parent) {
 		var node = nodes[i];
 
 		// If a position hasn't be defined arrange all the sub nodes equally around the parent
-		if (typeof node.position === 'undefined') {
+		if (typeof node.position === 'undefined' && typeof parent !== 'undefined') {
 			var angleDeg = ((360/nodes.length)*i)-90;
 			node.position = {
 				x: parent.position.x + (node.distance * Math.cos(toRadians(angleDeg))),
