@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Network Visualiser</title>
+	<style type="text/css">
+		html,body {
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+</head>
+<body>
+
+<canvas id="network" style="position:relative; background-color: #333;"></canvas>
+
+<script>
+	document.getElementById('network').width = window.innerWidth;
+	document.getElementById('network').height = window.innerHeight;
+
+	var canvas = document.getElementById('network');
+	var canvasContext = canvas.getContext('2d');
+
+	var nodeArray = [
+		{
+			'name': 'Alpha',
+			'position': {x: 150,y: 150},
+			'size': {x: 10,y: 10},
+			'subnodes': [
+				{
+					'name': 'AlphaAlpha',
+					'position': {x: 180,y: 180}
+				},
+				{
+					'name': 'AlphaBravo',
+					'position': {x: 180,y: 160}
+				}
+			]
+		},
+		{
+			'name': 'Bravo',
+			'position': {x: 250,y: 370}
+		}
+	];
+
+	function drawNodes(nodes, parent) {
+
+		for (var i=0; i<nodes.length; i++) {
+
+			var node = nodes[i];
+
+			canvasContext.fillStyle = '#FFF';
+			canvasContext.fillRect(node.position.x, node.position.y, 10, 10);
+
+			if (typeof parent !== 'undefined') {
+				canvasContext.beginPath();
+				canvasContext.strokeStyle = '#FFF';
+				canvasContext.moveTo(parent.position.x,parent.position.y);
+				canvasContext.lineTo(node.position.x, node.position.y);
+				canvasContext.stroke();
+			}
+
+			if (typeof node.subnodes !== 'undefined') {
+				drawNodes(node.subnodes, node);
+			}
+
+		}
+
+	}
+
+	drawNodes(nodeArray);
+</script>
+
+</body>
+</html>
