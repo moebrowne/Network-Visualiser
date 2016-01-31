@@ -38,6 +38,8 @@ function drawNodes(nodes, parent) {
 		canvasContext.fillStyle = '#FFF';
 		canvasContext.fillRect(node.position.x, node.position.y, node.size.x, node.size.y);
 
+		drawHTMLNode(node);
+
 		if (typeof parent !== 'undefined') {
 			canvasContext.beginPath();
 			canvasContext.strokeStyle = '#FFF';
@@ -51,6 +53,12 @@ function drawNodes(nodes, parent) {
 		}
 
 	}
+
+}
+
+function drawHTMLNode(node) {
+	var elem = $('<div/>').css({position: 'absolute', left: node.position.x, top: node.position.y, width: node.size.x, height: node.size.y, cursor: 'pointer'});
+	$('#networkNodeMap').append(elem);
 
 }
 
