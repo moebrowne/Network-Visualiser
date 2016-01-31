@@ -3,6 +3,8 @@ document.getElementById('network').height = window.innerHeight;
 
 var canvas = document.getElementById('network');
 var canvasContext = canvas.getContext('2d');
+canvasContext.fillStyle = '#333';
+canvasContext.strokeStyle = '#FFF';
 
 $.getJSON( "nodes.json", function( data ) {
 	drawNodes(data);
@@ -13,8 +15,6 @@ function drawNodes(nodes, parent) {
 	for (var i=0; i<nodes.length; i++) {
 
 		var node = nodes[i];
-
-		canvasContext.fillStyle = '#FFF';
 
 		// If a position hasn't be defined arrange all the sub nodes equally around the parent
 		if (typeof node.position === 'undefined') {
@@ -43,7 +43,6 @@ function drawNodes(nodes, parent) {
 		// Check if this node is a child element and therefore needs linking to its parent
 		if (typeof parent !== 'undefined') {
 			canvasContext.beginPath();
-			canvasContext.strokeStyle = '#FFF';
 			canvasContext.moveTo((parent.position.x+(parent.size/2)),(parent.position.y+(parent.size/2)));
 			canvasContext.lineTo(node.centre.x, node.centre.y);
 			canvasContext.stroke();
@@ -56,7 +55,6 @@ function drawNodes(nodes, parent) {
 
 		// Draw the node
 		canvasContext.rect(node.position.x, node.position.y, node.size, node.size);
-		canvasContext.fillStyle = '#333';
 		canvasContext.stroke();
 		canvasContext.fill();
 
@@ -73,5 +71,3 @@ function drawHTMLNode(node) {
 function toRadians (angle) {
 	return angle * (Math.PI / 180);
 }
-
-drawNodes(nodeArray);
