@@ -7,7 +7,7 @@ var canvasContext = canvas.getContext('2d');
 var nodeArray = [
 	{
 		name: 'Alpha',
-		position: {x: 150,y: 150},
+		position: {x: 550,y: 350},
 		size: 10,
 		subnodes: [
 			{
@@ -18,7 +18,7 @@ var nodeArray = [
 			{
 				name: 'AlphaBravo',
 				size: 5,
-				distance: 40
+				distance: 140
 			},
 			{
 				name: 'AlphaCharlie',
@@ -33,31 +33,31 @@ var nodeArray = [
 			{
 				name: 'AlphaEcho',
 				size: 5,
-				distance: 35
+				distance: 95
 			},
 			{
 				name: 'AlphaFoxtrot',
 				size: 5,
-				distance: 35
+				distance: 75
 			},
 			{
 				name: 'Charlie',
-				position: {x: 375,y: 290},
-				size: 20,
+				distance: 225,
+				size: 10,
 				subnodes: [
 					{
 						name: 'CharlieAlpha',
-						size: 14,
-						distance: 30
+						size: 5,
+						distance: 80
 					},
 					{
 						name: 'CharlieBravo',
-						size: 8,
+						size: 5,
 						distance: 40
 					},
 					{
 						name: 'CharlieCharlie',
-						size: 12,
+						size: 5,
 						distance: 82
 					}
 				]
@@ -94,10 +94,13 @@ function drawNodes(nodes, parent) {
 			y: node.position.y+(node.size/2)
 		};
 
+		// Draw the node
 		canvasContext.fillRect(node.position.x, node.position.y, node.size, node.size);
 
+		// Draw the HTML element mask
 		drawHTMLNode(node);
 
+		// Check if this node is a child element and therefore needs linking to its parent
 		if (typeof parent !== 'undefined') {
 			canvasContext.beginPath();
 			canvasContext.strokeStyle = '#FFF';
@@ -106,6 +109,7 @@ function drawNodes(nodes, parent) {
 			canvasContext.stroke();
 		}
 
+		// Check if there are children to draw
 		if (typeof node.subnodes !== 'undefined') {
 			drawNodes(node.subnodes, node);
 		}
