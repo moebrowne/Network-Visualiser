@@ -67,7 +67,74 @@ var nodeArray = [
 	{
 		name: 'Bravo',
 		position: {x: 250,y: 370},
-		size: 10
+		size: 10,
+		subnodes: [
+			{
+				name: 'AlphaAlpha',
+				size: 5,
+				distance: 30
+			},
+			{
+				name: 'AlphaAlpha',
+				size: 5,
+				distance: 30
+			},
+			{
+				name: 'AlphaAlpha',
+				size: 5,
+				distance: 30
+			},
+			{
+				name: 'AlphaAlpha',
+				size: 5,
+				distance: 30
+			},
+			{
+				name: 'AlphaAlpha',
+				size: 5,
+				distance: 30
+			},
+			{
+				name: 'AlphaAlpha',
+				size: 5,
+				distance: 30
+			},
+			{
+				name: 'AlphaAlpha',
+				size: 5,
+				distance: 30
+			},
+			{
+				name: 'AlphaAlpha',
+				size: 5,
+				distance: 30
+			},
+			{
+				name: 'AlphaAlpha',
+				size: 5,
+				distance: 30
+			},
+			{
+				name: 'AlphaAlpha',
+				size: 5,
+				distance: 30
+			},
+			{
+				name: 'AlphaAlpha',
+				size: 5,
+				distance: 30
+			},
+			{
+				name: 'AlphaAlpha',
+				size: 5,
+				distance: 30
+			},
+			{
+				name: 'AlphaAlpha',
+				size: 5,
+				distance: 30
+			}
+		]
 	}
 ];
 
@@ -88,6 +155,12 @@ function drawNodes(nodes, parent) {
 			}
 		}
 
+		// If this node is a child offset it so it aligns with the parent
+		if (typeof parent !== 'undefined') {
+			node.position.x += (node.size/2);
+			node.position.y += (node.size/2);
+		}
+
 		// Calculate the centre of the node
 		node.centre = {
 			x: node.position.x+(node.size/2),
@@ -95,7 +168,7 @@ function drawNodes(nodes, parent) {
 		};
 
 		// Draw the node
-		canvasContext.fillRect(node.position.x, node.position.y, node.size, node.size);
+		canvasContext.rect(node.position.x, node.position.y, node.size, node.size);
 
 		// Draw the HTML element mask
 		drawHTMLNode(node);
