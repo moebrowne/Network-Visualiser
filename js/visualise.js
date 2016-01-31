@@ -6,58 +6,58 @@ var canvasContext = canvas.getContext('2d');
 
 var nodeArray = [
 	{
-		'name': 'Alpha',
-		'position': {x: 150,y: 150},
-		'size': 10,
-		'subnodes': [
+		name: 'Alpha',
+		position: {x: 150,y: 150},
+		size: 10,
+		subnodes: [
 			{
-				'name': 'AlphaAlpha',
-				'size': 5,
+				name: 'AlphaAlpha',
+				size: 5,
 				distance: 30
 			},
 			{
-				'name': 'AlphaBravo',
-				'size': 5,
+				name: 'AlphaBravo',
+				size: 5,
 				distance: 40
 			},
 			{
-				'name': 'AlphaCharlie',
-				'size': 5,
+				name: 'AlphaCharlie',
+				size: 5,
 				distance: 82
 			},
 			{
-				'name': 'AlphaDelta',
-				'size': 5,
+				name: 'AlphaDelta',
+				size: 5,
 				distance: 70
 			},
 			{
-				'name': 'AlphaEcho',
-				'size': 5,
+				name: 'AlphaEcho',
+				size: 5,
 				distance: 35
 			},
 			{
-				'name': 'AlphaFoxtrot',
-				'size': 5,
+				name: 'AlphaFoxtrot',
+				size: 5,
 				distance: 35
 			},
 			{
-				'name': 'Charlie',
-				'position': {x: 375,y: 290},
-				'size': 20,
-				'subnodes': [
+				name: 'Charlie',
+				position: {x: 375,y: 290},
+				size: 20,
+				subnodes: [
 					{
-						'name': 'CharlieAlpha',
-						'size': 14,
+						name: 'CharlieAlpha',
+						size: 14,
 						distance: 30
 					},
 					{
-						'name': 'CharlieBravo',
-						'size': 8,
+						name: 'CharlieBravo',
+						size: 8,
 						distance: 40
 					},
 					{
-						'name': 'CharlieCharlie',
-						'size': 12,
+						name: 'CharlieCharlie',
+						size: 12,
 						distance: 82
 					}
 				]
@@ -65,9 +65,9 @@ var nodeArray = [
 		]
 	},
 	{
-		'name': 'Bravo',
-		'position': {x: 250,y: 370},
-		'size': 10
+		name: 'Bravo',
+		position: {x: 250,y: 370},
+		size: 10
 	}
 ];
 
