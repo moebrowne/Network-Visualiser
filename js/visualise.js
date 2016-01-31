@@ -12,13 +12,55 @@ var nodeArray = [
 		'subnodes': [
 			{
 				'name': 'AlphaAlpha',
-				'position': {x: 180,y: 180},
-				'size': {x: 5,y: 5}
+				'size': {x: 5,y: 5},
+				distance: 30
 			},
 			{
 				'name': 'AlphaBravo',
-				'position': {x: 180,y: 160},
-				'size': {x: 5,y: 5}
+				'size': {x: 5,y: 5},
+				distance: 40
+			},
+			{
+				'name': 'AlphaCharlie',
+				'size': {x: 5,y: 5},
+				distance: 82
+			},
+			{
+				'name': 'AlphaDelta',
+				'size': {x: 5,y: 5},
+				distance: 70
+			},
+			{
+				'name': 'AlphaEcho',
+				'size': {x: 5,y: 5},
+				distance: 35
+			},
+			{
+				'name': 'AlphaFoxtrot',
+				'size': {x: 5,y: 5},
+				distance: 35
+			},
+			{
+				'name': 'Charlie',
+				'position': {x: 375,y: 290},
+				'size': {x: 20,y: 20},
+				'subnodes': [
+					{
+						'name': 'CharlieAlpha',
+						'size': {x: 14,y: 14},
+						distance: 30
+					},
+					{
+						'name': 'CharlieBravo',
+						'size': {x: 8,y: 8},
+						distance: 40
+					},
+					{
+						'name': 'CharlieCharlie',
+						'size': {x: 12,y: 12},
+						distance: 82
+					}
+				]
 			}
 		]
 	},
@@ -36,6 +78,16 @@ function drawNodes(nodes, parent) {
 		var node = nodes[i];
 
 		canvasContext.fillStyle = '#FFF';
+
+		// If a position hasn't be defined arrange all the sub nodes equally around the parent
+		if (typeof node.position === 'undefined') {
+			var angleDeg = ((360/nodes.length)*i)-90;
+			node.position = {
+				x: parent.position.x + (node.distance * Math.cos(toRadians(angleDeg))),
+				y: parent.position.y + node.distance * Math.sin(toRadians(angleDeg))
+			}
+		}
+
 		canvasContext.fillRect(node.position.x, node.position.y, node.size.x, node.size.y);
 
 		drawHTMLNode(node);
@@ -60,6 +112,10 @@ function drawHTMLNode(node) {
 	var elem = $('<div/>').css({position: 'absolute', left: node.position.x, top: node.position.y, width: node.size.x, height: node.size.y, cursor: 'pointer'});
 	$('#networkNodeMap').append(elem);
 
+}
+
+function toRadians (angle) {
+	return angle * (Math.PI / 180);
 }
 
 drawNodes(nodeArray);
