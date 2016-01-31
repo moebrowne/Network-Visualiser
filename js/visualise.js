@@ -88,6 +88,12 @@ function drawNodes(nodes, parent) {
 			}
 		}
 
+		// Calculate the centre of the node
+		node.centre = {
+			x: node.position.x+(node.size/2),
+			y: node.position.y+(node.size/2)
+		};
+
 		canvasContext.fillRect(node.position.x, node.position.y, node.size, node.size);
 
 		drawHTMLNode(node);
@@ -96,7 +102,7 @@ function drawNodes(nodes, parent) {
 			canvasContext.beginPath();
 			canvasContext.strokeStyle = '#FFF';
 			canvasContext.moveTo((parent.position.x+(parent.size/2)),(parent.position.y+(parent.size/2)));
-			canvasContext.lineTo(node.position.x+(node.size/2), node.position.y+(node.size/2));
+			canvasContext.lineTo(node.centre.x, node.centre.y);
 			canvasContext.stroke();
 		}
 
