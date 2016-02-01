@@ -11,8 +11,7 @@ fs.createReadStream('airmondata')
 	.pipe(csv())
 	.on('data', function(data) {
 
-		//console.log('row', data);
-
+		// Remove unassociated clients
 		if (data[' BSSID'] === ' (not associated) ') {
 			return;
 		}
@@ -40,7 +39,6 @@ fs.createReadStream('airmondata')
 
 		Object.keys(nodeData).forEach(function(key) {
 			var val = nodeData[key];
-			console.log(val);
 			cleanData.push(val);
 		});
 
