@@ -35,8 +35,6 @@ fs.createReadStream('airmondata')
 			"distance": (Math.max((1-data[' Power']),25))});
 	})
 	.on('end', function() {
-		//console.log(nodeData);
-		//console.log(JSON.stringify(nodeData));
 
 		var cleanData = [];
 
@@ -45,8 +43,6 @@ fs.createReadStream('airmondata')
 			console.log(val);
 			cleanData.push(val);
 		});
-
-		console.log(cleanData);
 
 		var allData = [];
 
