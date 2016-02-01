@@ -4,7 +4,8 @@
   "description": "A visual representation of a network",
   "main": "index.js",
   "dependencies": {
-    "jquery": "^2.2.0"
+    "jquery": "^2.2.0",
+    "wireless-tools": "^0.14.0"
   },
   "devDependencies": {},
   "scripts": {
