@@ -3,6 +3,9 @@ var fs = require('fs');
 
 var nodeData = [];
 
+var associated = 0;
+var unassociated = 0;
+
 function getRandomIntInclusive(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -13,8 +16,11 @@ fs.createReadStream('airmondata')
 
 		// Remove unassociated clients
 		if (data[' BSSID'] === ' (not associated) ') {
+			unassociated++;
 			return;
 		}
+
+		associated++;
 
 		if(typeof nodeData[data[' BSSID']] === 'undefined') {
 			nodeData[data[' BSSID']] = {
@@ -53,6 +59,10 @@ fs.createReadStream('airmondata')
 			"size": 20,
 			"subnodes": cleanData
 		});
+
+		console.log('APs: '+cleanData.length);
+		console.log('Associated Clients: '+associated);
+		console.log('Unassociated Clients: '+unassociated);
 
 		fs.writeFile('nodes.json', JSON.stringify(allData), { flags: '+w' }, function (err) {
 			if (err !== null) {
