@@ -32,7 +32,7 @@ fs.createReadStream('airmondata')
 		nodeData[data[' BSSID']].subnodes.push({
 			"name": data['Station MAC'],
 			"size": 5,
-			"distance": ((data[' Power']/1.1)+3)});
+			"distance": (Math.max((1-data[' Power']),25))});
 	})
 	.on('end', function() {
 		//console.log(nodeData);
