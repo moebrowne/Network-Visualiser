@@ -48,8 +48,19 @@ fs.createReadStream('airmondata')
 
 		console.log(cleanData);
 
+		var allData = [];
 
-		fs.writeFile('nodes.json', JSON.stringify(cleanData), { flags: '+w' }, function (err) {
+		allData.push({
+			"name": "WLAN9",
+			"position": {
+				"x": 600,
+				"y": 300
+			},
+			"size": 20,
+			"subnodes": cleanData
+		});
+
+		fs.writeFile('nodes.json', JSON.stringify(allData), { flags: '+w' }, function (err) {
 			if (err !== null) {
 				console.error(err);
 				throw err;
