@@ -4,6 +4,7 @@
   "description": "A visual representation of a network",
   "main": "index.js",
   "dependencies": {
+    "csv-parser": "^1.9.3",
     "jquery": "^2.2.0"
   },
   "devDependencies": {},
