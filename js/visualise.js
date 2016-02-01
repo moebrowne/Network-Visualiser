@@ -63,7 +63,7 @@ function drawNodes(nodes, parent) {
 }
 
 function drawHTMLNode(node) {
-	var elem = $('<div/>').css({position: 'absolute', left: node.position.x, top: node.position.y, width: node.size, height: node.size, cursor: 'pointer'});
+	var elem = $('<div/>').css({position: 'absolute', left: node.position.x, top: node.position.y, width: node.size, height: node.size, cursor: 'pointer'}).attr('title', node.name);
 	$('#networkNodeMap').append(elem);
 
 }
