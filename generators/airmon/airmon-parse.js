@@ -20,8 +20,8 @@ fs.createReadStream('airmondata')
 			nodeData[data[' BSSID']] = {
 				"name": data[' BSSID'],
 				"position": {
-					"x": getRandomIntInclusive(100,1200),
-					"y": getRandomIntInclusive(100,600)
+					"x": getRandomIntInclusive(25,1200),
+					"y": getRandomIntInclusive(25,900)
 				},
 				"size": 10,
 				"subnodes": []
