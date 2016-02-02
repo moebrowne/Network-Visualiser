@@ -1,5 +1,6 @@
 var csv = require('csv-parser');
 var fs = require('fs');
+require('datejs');
 
 var nodeData = [];
 
@@ -17,6 +18,12 @@ fs.createReadStream('airmondata')
 		// Remove unassociated clients
 		if (data[' BSSID'] === ' (not associated) ') {
 			unassociated++;
+			return;
+		}
+
+		var dateLastSeen = Date.parse(data[' Last time seen']);
+		var rangeLower = Date.parse('2016-02-02 19:00:00');
+		if (dateLastSeen.getTime() < rangeLower.getTime()) {
 			return;
 		}
 
