@@ -41,13 +41,6 @@ fs.createReadStream('airmondata')
 	})
 	.on('end', function() {
 
-		var cleanData = [];
-
-		Object.keys(nodeData).forEach(function(key) {
-			var val = nodeData[key];
-			cleanData.push(val);
-		});
-
 		var allData = [];
 
 		allData.push({
@@ -57,10 +50,15 @@ fs.createReadStream('airmondata')
 				"y": 300
 			},
 			"size": 20,
-			"subnodes": cleanData
+			"subnodes": []
 		});
 
-		console.log('APs: '+cleanData.length);
+		Object.keys(nodeData).forEach(function(key) {
+			var val = nodeData[key];
+			allData[0].subnodes.push(val);
+		});
+
+		console.log('APs: '+allData[0].subnodes.length);
 		console.log('Associated Clients: '+associated);
 		console.log('Unassociated Clients: '+unassociated);
 
