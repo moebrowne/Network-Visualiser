@@ -16,16 +16,13 @@ fs.createReadStream('xx00')
 	.pipe(csv())
 	.on('data', function(data) {
 
-		if(typeof data['BSSID'] === 'undefined' || data[' ESSID'] === ' ') {
+		if(typeof data['BSSID'] === 'undefined' || data[' ESSID'] === ' ' || data[' Power'] === '  -1') {
 			return;
 		}
 
 		nodeData[data['BSSID']] = {
-			"name": data[' ESSID'],
-			"position": {
-				"x": getRandomIntInclusive(25,1200),
-				"y": getRandomIntInclusive(25,900)
-			},
+			"name": data[' ESSID']+' ('+data[' Power']+')',
+			"distance": (80+parseInt(data[' Power']))*15,
 			"size": 10,
 			"subnodes": []
 		};
@@ -55,7 +52,7 @@ fs.createReadStream('xx00')
 
 				associated++;
 
-				console.log(nodeData[data[' BSSID']]);
+				//console.log(nodeData[data[' BSSID']]);
 
 				nodeData[data[' BSSID']].subnodes.push({
 					"name": data['Station MAC'],
@@ -71,7 +68,7 @@ fs.createReadStream('xx00')
 					"name": "WLAN9",
 					"position": {
 						"x": 600,
-						"y": 300
+						"y": 450
 					},
 					"size": 20,
 					"subnodes": []
