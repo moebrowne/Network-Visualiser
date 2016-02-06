@@ -6,7 +6,7 @@ var canvasContext = canvas.getContext('2d');
 canvasContext.fillStyle = '#333';
 canvasContext.strokeStyle = '#FFF';
 
-$.getJSON( "nodes.json", function( data ) {
+$.getJSON( "generators/airmon/nodes.json", function( data ) {
 	drawNodes(data);
 });
 
