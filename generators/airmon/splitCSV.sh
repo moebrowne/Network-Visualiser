@@ -1,6 +1,6 @@
 #!/bin/bash
 
-csplit airmondatafull.csv "/Station MAC,/" "{*}"
+csplit $HOME/output-03.csv "/Station MAC,/" "{*}"
 
 tail -n +1 xx00 > xx00temp
 mv xx00temp xx00
