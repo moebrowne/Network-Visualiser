@@ -12,7 +12,7 @@ function getRandomIntInclusive(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-fs.createReadStream('xx00')
+fs.createReadStream('airmondata-APs.csv')
 	.pipe(csv())
 	.on('data', function(data) {
 
@@ -29,7 +29,7 @@ fs.createReadStream('xx00')
 	})
 	.on('end', function() {
 
-		fs.createReadStream('xx01')
+		fs.createReadStream('airmondata-clients.csv')
 			.pipe(csv())
 			.on('data', function (data) {
 
