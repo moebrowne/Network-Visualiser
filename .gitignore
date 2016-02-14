@@ -2,3 +2,5 @@
 node_modules
 
 nodes.json
+
+generators/airmon/*.csv
