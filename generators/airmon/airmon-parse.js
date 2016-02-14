@@ -22,7 +22,7 @@ fs.createReadStream('airmondata-APs.csv')
 
 		nodeData[data['BSSID']] = {
 			"name": data[' ESSID']+' ('+data[' Power']+')',
-			"distance": (80+parseInt(data[' Power']))*15,
+			"distance": (0-parseInt(data[' Power']))*5,
 			"size": 10,
 			"subnodes": []
 		};
