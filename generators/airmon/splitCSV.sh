@@ -1,8 +1,10 @@
 #!/bin/bash
 
-inotifywait -e modify -m "$HOME/output-03.csv" | while read data; do
+OUTPUTFILE="$HOME/output-05.csv"
 
-    csplit $HOME/output-03.csv "/Station MAC,/" "{*}"
+inotifywait -e modify -m "$OUTPUTFILE" | while read data; do
+
+    csplit "$OUTPUTFILE" "/Station MAC,/" "{*}"
 
     tail -n +2 xx00 > xx00temp
     mv xx00temp xx00
