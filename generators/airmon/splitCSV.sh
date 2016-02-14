@@ -18,4 +18,6 @@ inotifywait -e modify -m "$OUTPUTFILE" | while read data; do
     # Get Node to parse the data
     node airmon-parse.js
 
+    echo "- - - - - - - - - - - - - - -"
+
 done
