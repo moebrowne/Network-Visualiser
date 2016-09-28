@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OUTPUTFILE="$HOME/output-05.csv"
+OUTPUTFILE="data-01.csv"
 
 inotifywait -e modify -m "$OUTPUTFILE" | while read data; do
 
@@ -15,9 +15,6 @@ inotifywait -e modify -m "$OUTPUTFILE" | while read data; do
     tail -n +2 airmondata-APs.csv > airmondata-APs-temp.csv
     mv airmondata-APs-temp.csv airmondata-APs.csv
 
-    # Get Node to parse the data
-    node airmon-parse.js
-
-    echo "- - - - - - - - - - - - - - -"
+    echo "Files changed"
 
 done
