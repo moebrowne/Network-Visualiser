@@ -45,8 +45,6 @@ io.on('connection', function(socket) {
 			if (typeof APs[APMacAddr] === 'undefined') {
 				return;
 			}
-			console.log(clientMacAddr);
-
 
 			var client = {
 				'mac': clientMacAddr,
