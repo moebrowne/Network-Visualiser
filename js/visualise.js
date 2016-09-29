@@ -19,6 +19,8 @@ socket.on('AP', function (AP) {
 			y: getRandomArbitrary(60, canvas.height-60)
 		};
 
+		AP.rotate = 0;
+
 		APs[AP.mac] = AP;
 
 		if (typeof APs[AP.mac].clients === 'undefined') {
@@ -83,6 +85,8 @@ function drawAPClients(AP) {
 			y: AP.position.y + (clientNodeDistance * Math.sin(toRadians(angle)))
 		};
 
+		client.rotate = angle;
+
 		// Adjust the position of the client nodes to line up with the AP
 		client.position.x += (client.size/2);
 		client.position.y += (client.size/2);
@@ -105,11 +109,15 @@ function drawNode(node, linkTo) {
 	drawHTMLNode(node);
 
 	// Draw the node
+	canvasContext.save();
 	canvasContext.beginPath();
-	canvasContext.rect(node.position.x, node.position.y, node.size, node.size);
+	canvasContext.translate(node.centre.x, node.centre.y);
+	canvasContext.rotate(node.rotate*Math.PI/180);
+	canvasContext.rect(-node.size/2, -node.size/2, node.size, node.size);
 	canvasContext.stroke();
 	canvasContext.fill();
 	canvasContext.closePath();
+	canvasContext.restore();
 
 	if (typeof linkTo !== 'undefined') {
 		canvasContext.beginPath();
