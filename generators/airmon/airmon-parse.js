@@ -35,7 +35,7 @@ io.on('connection', function(socket) {
 		fs.createReadStream('airmondata-clients.csv')
 		.pipe(csv())
 		.on('data', function (data) {
-			if (typeof data['Station MAC'] === 'undefined' || data[' BSSID'] === ' ' || data[' BSSID'] === ' (not associated) ') {
+			if (typeof data['Station MAC'] === 'undefined' || typeof data[' BSSID'] === 'undefined' || data[' BSSID'] === ' ' || data[' BSSID'] === ' (not associated) ') {
 				return;
 			}
 
