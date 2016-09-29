@@ -12,52 +12,63 @@ var socket = io('http://localhost:3000');
 
 socket.on('AP', function (AP) {
 
-	AP.position = {
-		x: getRandomArbitrary(0, 1000),
-		y: getRandomArbitrary(0, 500)
-	};
+	if (typeof APs[AP.mac] === 'undefined') {
 
-	if (typeof APs[AP['mac']] === 'undefined') {
-		APs[AP['mac']] = AP;
-		APs[AP['mac']].clients = {};
-		drawNode(AP);
+		APs[AP.mac] = AP;
+
+		if (typeof APs[AP.mac].clients === 'undefined') {
+			APs[AP.mac].clients = {};
+		}
+
+		render();
 	}
 
 });
 
 socket.on('client', function (client) {
-	if (typeof APs[client['AP']] === "undefined") {
+	if (typeof APs[client.AP] === "undefined") {
 		//drawNode(client);
 		return;
 	}
 
-	if (typeof APs[client['AP']]['clients'][client['mac']] === 'undefined') {
-		APs[client['AP']]['clients'][client['mac']] = client;
-		drawNode(client, APs[client['AP']]);
+	if (typeof APs[client.AP].clients[client.mac] === 'undefined') {
+		APs[client.AP].clients[client.mac] = client;
+		//render();
 	}
 });
 
+function render() {
+	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
-function drawNode(node, parent) {
-
-	node.distance = 50;
-
-	// If a position hasn't be defined arrange all the sub node equally around the parent
-	if (typeof parent !== 'undefined') {
-
-		var clientCount = Object.keys(parent.clients).length;
-
-		var angleDeg = ((360 / (clientCount+1)) * getRandomArbitrary(0, 60)) - 90;
-		node.positionOffset = {
-			x: node.distance * Math.cos(toRadians(angleDeg)),
-			y: node.distance * Math.sin(toRadians(angleDeg))
-		};
-
-		node.position = {
-			x: parent.position.x + node.positionOffset.x,
-			y: parent.position.y + node.positionOffset.y
-		};
+	for (var APMac in APs) {
+		var AP = APs[APMac];
+		drawAP(AP);
 	}
+}
+
+function drawAP(AP) {
+
+	AP.position = {
+		x: getRandomArbitrary(0, 1000),
+		y: getRandomArbitrary(0, 500)
+	};
+
+	drawNode(AP);
+}
+
+function drawAPClients(AP) {
+
+	var clientCount = Object.keys(AP.clients).length;
+
+	var angleDeg = ((360 / clientCount) * getRandomArbitrary(0, 60)) - 90;
+	node.positionOffset = {
+		x: node.distance * Math.cos(toRadians(angleDeg)),
+		y: node.distance * Math.sin(toRadians(angleDeg))
+	};
+}
+
+
+function drawNode(node, linkTo) {
 
 	// Calculate the centre of the node
 	node.centre = {
@@ -68,26 +79,20 @@ function drawNode(node, parent) {
 	// Draw the HTML element mask
 	drawHTMLNode(node);
 
-	// Check if this node is a child element and therefore needs linking to its parent
-	if (typeof parent !== 'undefined') {
-		canvasContext.beginPath();
-		canvasContext.moveTo((parent.position.x+(parent.size/2)),(parent.position.y+(parent.size/2)));
-		canvasContext.lineTo(node.centre.x, node.centre.y);
-		canvasContext.stroke();
-	}
-
-	// Check if there are children to draw
-	if (typeof node.clients !== 'undefined') {
-		for (var i=0; i<node.clients.length; i++) {
-			drawNode(node.clients[i], node);
-		}
-	}
-
 	// Draw the node
+	canvasContext.beginPath();
 	canvasContext.rect(node.position.x, node.position.y, node.size, node.size);
 	canvasContext.stroke();
 	canvasContext.fill();
+	canvasContext.closePath();
 
+	if (typeof linkTo !== 'undefined') {
+		canvasContext.beginPath();
+		canvasContext.moveTo(linkTo.centre.x, linkTo.centre.y);
+		canvasContext.lineTo(node.centre.x, node.centre.y);
+		canvasContext.stroke();
+		canvasContext.closePath();
+	}
 }
 
 function drawHTMLNode(node) {
