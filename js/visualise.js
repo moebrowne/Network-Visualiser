@@ -14,6 +14,11 @@ socket.on('AP', function (AP) {
 
 	if (typeof APs[AP.mac] === 'undefined') {
 
+		AP.position = {
+			x: getRandomArbitrary(0, 1000),
+			y: getRandomArbitrary(0, 500)
+		};
+
 		APs[AP.mac] = AP;
 
 		if (typeof APs[AP.mac].clients === 'undefined') {
@@ -33,7 +38,7 @@ socket.on('client', function (client) {
 
 	if (typeof APs[client.AP].clients[client.mac] === 'undefined') {
 		APs[client.AP].clients[client.mac] = client;
-		//render();
+		render();
 	}
 });
 
@@ -48,23 +53,40 @@ function render() {
 
 function drawAP(AP) {
 
-	AP.position = {
-		x: getRandomArbitrary(0, 1000),
-		y: getRandomArbitrary(0, 500)
-	};
-
 	drawNode(AP);
+
+	if (typeof AP.clients !== 'undefined') {
+		drawAPClients(AP);
+	}
+
 }
 
 function drawAPClients(AP) {
 
 	var clientCount = Object.keys(AP.clients).length;
 
-	var angleDeg = ((360 / clientCount) * getRandomArbitrary(0, 60)) - 90;
-	node.positionOffset = {
-		x: node.distance * Math.cos(toRadians(angleDeg)),
-		y: node.distance * Math.sin(toRadians(angleDeg))
-	};
+	if (clientCount === 0) {
+		return;
+	}
+	console.log(clientCount);
+
+	var clientNodeDistance = 50;
+	var angleDeg = (360 / clientCount);
+
+	var i = 0;
+	for (var clientMac in AP.clients) {
+
+		var client = AP.clients[clientMac];
+		var angle = (angleDeg * i++) - 90;
+
+		client.position = {
+			x: AP.position.x + (clientNodeDistance * Math.cos(toRadians(angle))),
+			y: AP.position.y + (clientNodeDistance * Math.sin(toRadians(angle)))
+		};
+
+		drawNode(client, AP);
+	}
+
 }
 
 
