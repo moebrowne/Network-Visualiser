@@ -83,6 +83,10 @@ function drawAPClients(AP) {
 			y: AP.position.y + (clientNodeDistance * Math.sin(toRadians(angle)))
 		};
 
+		// Adjust the position of the client nodes to line up with the AP
+		client.position.x += (client.size/2);
+		client.position.y += (client.size/2);
+
 		drawNode(client, AP);
 	}
 
