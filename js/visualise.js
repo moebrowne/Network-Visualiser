@@ -15,8 +15,8 @@ socket.on('AP', function (AP) {
 	if (typeof APs[AP.mac] === 'undefined') {
 
 		AP.position = {
-			x: getRandomArbitrary(0, 1000),
-			y: getRandomArbitrary(0, 500)
+			x: getRandomArbitrary(0, canvas.width),
+			y: getRandomArbitrary(0, canvas.height)
 		};
 
 		APs[AP.mac] = AP;
