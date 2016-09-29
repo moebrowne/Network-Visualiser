@@ -3,41 +3,61 @@ var csv = require('csv-parser');
 var fs = require('fs');
 require('datejs');
 
+var APs = {};
+var clients = {};
+
 io.on('connection', function(socket) {
 	console.log('User connected');
 
-	fs.watchFile('airmondata-APs.csv', function(curr, prev) {
+	fs.watch('airmondata-APs.csv', {}, function() {
 		fs.createReadStream('airmondata-APs.csv')
 		.pipe(csv())
 		.on('data', function (data) {
 
-			if (typeof data['BSSID'] === 'undefined' || data[' ESSID'] === ' ' || data[' Power'] === '  -1') {
+			if (typeof data['BSSID'] === 'undefined') {
 				return;
 			}
 
-			socket.emit('AP', {
-				'mac': data['BSSID'].replace(' ',''),
+			var macAddr = data['BSSID'].replace(' ', '');
+			var AP = {
+				'mac': macAddr,
 				'power': data[' Power'],
 				'size': 10
-			});
+			};
+
+			APs[macAddr] = AP;
+
+			socket.emit('AP', AP);
 		});
 	});
 
-	fs.watchFile('airmondata-clients.csv', function(curr, prev) {
+	fs.watch('airmondata-clients.csv', {}, function() {
 		fs.createReadStream('airmondata-clients.csv')
 		.pipe(csv())
 		.on('data', function (data) {
-
-			if (typeof data['Station MAC'] === 'undefined' || data[' BSSID'] === ' ') {
+			if (typeof data['Station MAC'] === 'undefined' || data[' BSSID'] === ' ' || data[' BSSID'] === ' (not associated) ') {
 				return;
 			}
 
-			socket.emit('client', {
-				'mac': data['Station MAC'].replace(' ', ''),
-				'AP': data[' BSSID'].replace(' ', ''),
+			var APMacAddr = data[' BSSID'].replace(' ', '');
+			var clientMacAddr = data['Station MAC'].replace(' ', '');
+
+			if (typeof APs[APMacAddr] === 'undefined') {
+				return;
+			}
+			console.log(clientMacAddr);
+
+
+			var client = {
+				'mac': clientMacAddr,
+				'AP': APMacAddr,
 				'power': data[' Power'],
 				'size': 5
-			});
+			};
+
+			clients[clientMacAddr] = client;
+
+			socket.emit('client', client);
 		});
 	});
 });
