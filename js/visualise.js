@@ -129,6 +129,11 @@ function drawNode(node, linkTo) {
 }
 
 function drawHTMLNode(node) {
+
+	if (node.hasHTMLElement === true) {
+		return;
+	}
+
 	var elem = $('<div/>')
 		.css({position: 'absolute', left: node.position.x, top: node.position.y, width: node.size, height: node.size, cursor: 'pointer'})
 		.attr('title', node.name)
@@ -148,6 +153,8 @@ function drawHTMLNode(node) {
 
 		drawAllNodes();
 	}, false);
+
+	node.hasHTMLElement = true;
 
 }
 
