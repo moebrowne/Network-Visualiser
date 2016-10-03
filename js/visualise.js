@@ -110,21 +110,30 @@ function drawNode(node, linkTo) {
 	// Draw the HTML element mask
 	drawHTMLNode(node);
 
+	// Set the node (and connecting line) colour based on the time the node was last seen
+	let nodeColour = '#FFFFFF';
+	if (node.lastSeenSeconds > 120) {
+		nodeColour = '#777777';
+	}
+
 	// Draw the node
 	canvasContext.save();
 	canvasContext.beginPath();
 	canvasContext.translate(node.centre.x, node.centre.y);
 	canvasContext.rotate(node.rotate*Math.PI/180);
 	canvasContext.rect(-node.size/2, -node.size/2, node.size, node.size);
+	canvasContext.strokeStyle = nodeColour;
 	canvasContext.stroke();
 	canvasContext.fill();
 	canvasContext.closePath();
 	canvasContext.restore();
 
 	if (typeof linkTo !== 'undefined') {
+
 		canvasContext.beginPath();
 		canvasContext.moveTo(linkTo.centre.x, linkTo.centre.y);
 		canvasContext.lineTo(node.centre.x, node.centre.y);
+		canvasContext.strokeStyle = nodeColour;
 		canvasContext.stroke();
 		canvasContext.closePath();
 	}
