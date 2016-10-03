@@ -23,11 +23,7 @@ socket.on('AP', function (AP) {
 
 		APs[AP.mac] = AP;
 
-		if (typeof APs[AP.mac].clients === 'undefined') {
-			APs[AP.mac].clients = {};
-		}
-
-		render();
+		APs[AP.mac].clients = {};
 	}
 
 });
@@ -38,11 +34,15 @@ socket.on('client', function (client) {
 		return;
 	}
 
-	if (typeof APs[client.AP].clients[client.mac] === 'undefined') {
-		APs[client.AP].clients[client.mac] = client;
-		render();
-	}
+	APs[client.AP].clients[client.mac] = client;
 });
+
+function draw() {
+	setTimeout(function(){requestAnimationFrame(draw)}, 100);
+	render();
+}
+draw();
+
 
 function render() {
 	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
