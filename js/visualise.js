@@ -8,7 +8,7 @@ canvasContext.strokeStyle = '#FFF';
 
 var APs = {};
 
-var socket = io('http://localhost:3000');
+var socket = io('//:3000');
 
 socket.on('AP', function (AP) {
 
