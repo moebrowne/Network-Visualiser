@@ -1,3 +1,5 @@
+'use strict';
+
 var io = require('socket.io')(3000);
 var csv = require('csv-parser');
 var fs = require('fs');
@@ -18,12 +20,16 @@ io.on('connection', function(socket) {
 				return;
 			}
 
+			let timestampNow = (Date.now()/1000);
+			let timestampLastSeen = (Date.parse(data[' Last time seen'])/1000);
+
 			var macAddr = data['BSSID'].replace(' ', '');
 			var SSID = data[' ESSID'];
 			var AP = {
 				'mac': macAddr,
 				'SSID': SSID,
 				'power': data[' Power'],
+				'lastSeenSeconds': (timestampNow-timestampLastSeen),
 				'size': 10
 			};
 
@@ -48,10 +54,14 @@ io.on('connection', function(socket) {
 				return;
 			}
 
+			let timestampNow = (Date.now()/1000);
+			let timestampLastSeen = (Date.parse(data[' Last time seen'])/1000);
+
 			var client = {
 				'mac': clientMacAddr,
 				'AP': APMacAddr,
 				'power': data[' Power'],
+				'lastSeenSeconds': (timestampNow-timestampLastSeen),
 				'size': 5
 			};
 
