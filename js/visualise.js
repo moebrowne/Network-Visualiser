@@ -34,7 +34,9 @@ socket.on('client', function (client) {
 		return;
 	}
 
-	APs[client.AP].clients[client.mac] = client;
+	if (typeof APs[client.AP].clients[client.mac] === 'undefined') {
+		APs[client.AP].clients[client.mac] = client;
+	}
 });
 
 function draw() {
