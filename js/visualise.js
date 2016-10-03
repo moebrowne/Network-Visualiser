@@ -6,68 +6,155 @@ var canvasContext = canvas.getContext('2d');
 canvasContext.fillStyle = '#333';
 canvasContext.strokeStyle = '#FFF';
 
-$.getJSON( "generators/airmon/nodes.json", function( data ) {
-	drawNodes(data);
-});
+var APs = {};
 
-function drawNodes(nodes, parent) {
+var socket = io('http://localhost:3000');
 
-	for (var i=0; i<nodes.length; i++) {
+socket.on('AP', function (AP) {
 
-		var node = nodes[i];
+	if (typeof APs[AP.mac] === 'undefined') {
 
-		// If a position hasn't be defined arrange all the sub nodes equally around the parent
-		if (typeof node.position === 'undefined' && typeof parent !== 'undefined') {
-			var angleDeg = ((360/nodes.length)*i)-90;
-			node.position = {
-				x: parent.position.x + (node.distance * Math.cos(toRadians(angleDeg))),
-				y: parent.position.y + node.distance * Math.sin(toRadians(angleDeg))
-			}
-		}
-
-		// If this node is a child offset it so it aligns with the parent
-		if (typeof parent !== 'undefined') {
-			node.position.x += (node.size/2);
-			node.position.y += (node.size/2);
-		}
-
-		// Calculate the centre of the node
-		node.centre = {
-			x: node.position.x+(node.size/2),
-			y: node.position.y+(node.size/2)
+		AP.position = {
+			x: getRandomArbitrary(60, canvas.width-60),
+			y: getRandomArbitrary(60, canvas.height-60)
 		};
 
-		// Draw the HTML element mask
-		drawHTMLNode(node);
+		AP.rotate = 0;
 
-		// Check if this node is a child element and therefore needs linking to its parent
-		if (typeof parent !== 'undefined') {
-			canvasContext.beginPath();
-			canvasContext.moveTo((parent.position.x+(parent.size/2)),(parent.position.y+(parent.size/2)));
-			canvasContext.lineTo(node.centre.x, node.centre.y);
-			canvasContext.stroke();
-		}
+		APs[AP.mac] = AP;
 
-		// Check if there are children to draw
-		if (typeof node.subnodes !== 'undefined') {
-			drawNodes(node.subnodes, node);
-		}
+		APs[AP.mac].clients = {};
+	}
 
-		// Draw the node
-		canvasContext.rect(node.position.x, node.position.y, node.size, node.size);
-		canvasContext.stroke();
-		canvasContext.fill();
+});
 
+socket.on('client', function (client) {
+	if (typeof APs[client.AP] === "undefined") {
+		//drawNode(client);
+		return;
+	}
+
+	APs[client.AP].clients[client.mac] = client;
+});
+
+function draw() {
+	setTimeout(function(){requestAnimationFrame(draw)}, 100);
+	render();
+}
+draw();
+
+
+function render() {
+	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+	for (var APMac in APs) {
+		var AP = APs[APMac];
+		drawAP(AP);
+	}
+}
+
+function drawAP(AP) {
+
+	drawNode(AP);
+
+	if (typeof AP.clients !== 'undefined') {
+		drawAPClients(AP);
 	}
 
 }
 
+function drawAPClients(AP) {
+
+	var clientCount = Object.keys(AP.clients).length;
+
+	if (clientCount === 0) {
+		return;
+	}
+
+	var clientNodeDistance = 50;
+	var angleDeg = (360 / clientCount);
+
+	var i = 0;
+	for (var clientMac in AP.clients) {
+
+		var client = AP.clients[clientMac];
+		var angle = (angleDeg * i++) - 90;
+
+		client.position = {
+			x: AP.position.x + (clientNodeDistance * Math.cos(toRadians(angle))),
+			y: AP.position.y + (clientNodeDistance * Math.sin(toRadians(angle)))
+		};
+
+		client.rotate = angle;
+
+		// Adjust the position of the client nodes to line up with the AP
+		client.position.x += (client.size/2);
+		client.position.y += (client.size/2);
+
+		drawNode(client, AP);
+	}
+
+}
+
+
+function drawNode(node, linkTo) {
+
+	// Calculate the centre of the node
+	node.centre = {
+		x: node.position.x+(node.size/2),
+		y: node.position.y+(node.size/2)
+	};
+
+	// Draw the HTML element mask
+	drawHTMLNode(node);
+
+	// Draw the node
+	canvasContext.save();
+	canvasContext.beginPath();
+	canvasContext.translate(node.centre.x, node.centre.y);
+	canvasContext.rotate(node.rotate*Math.PI/180);
+	canvasContext.rect(-node.size/2, -node.size/2, node.size, node.size);
+	canvasContext.stroke();
+	canvasContext.fill();
+	canvasContext.closePath();
+	canvasContext.restore();
+
+	if (typeof linkTo !== 'undefined') {
+		canvasContext.beginPath();
+		canvasContext.moveTo(linkTo.centre.x, linkTo.centre.y);
+		canvasContext.lineTo(node.centre.x, node.centre.y);
+		canvasContext.stroke();
+		canvasContext.closePath();
+	}
+}
+
 function drawHTMLNode(node) {
-	var elem = $('<div/>').css({position: 'absolute', left: node.position.x, top: node.position.y, width: node.size, height: node.size, cursor: 'pointer'}).attr('title', node.name);
+	var elem = $('<div/>')
+		.css({position: 'absolute', left: node.position.x, top: node.position.y, width: node.size, height: node.size, cursor: 'pointer'})
+		.attr('title', node.name)
+		.attr('id', node.id)
+		.attr('draggable', true);
 	$('#networkNodeMap').append(elem);
+
+	document.addEventListener('dragexit', function(e) {
+		var node = nodeLookup[this.getAttribute('id')];
+
+		console.log(node);
+
+		node.position = {
+			x: e.pageX,
+			y: e.pageY
+		};
+
+		drawAllNodes();
+	}, false);
 
 }
 
 function toRadians (angle) {
 	return angle * (Math.PI / 180);
+}
+
+function getRandomArbitrary(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
