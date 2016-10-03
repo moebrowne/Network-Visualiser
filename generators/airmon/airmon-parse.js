@@ -19,8 +19,10 @@ io.on('connection', function(socket) {
 			}
 
 			var macAddr = data['BSSID'].replace(' ', '');
+			var SSID = data[' ESSID'];
 			var AP = {
 				'mac': macAddr,
+				'SSID': SSID,
 				'power': data[' Power'],
 				'size': 10
 			};

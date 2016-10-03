@@ -138,9 +138,8 @@ function drawHTMLNode(node) {
 
 	var elem = $('<div/>')
 		.css({position: 'absolute', left: node.position.x, top: node.position.y, width: node.size, height: node.size, cursor: 'pointer'})
-		.attr('title', node.name)
-		.attr('id', node.id)
-		.attr('draggable', true);
+		.attr('title', node.SSID)
+		.attr('id', 'MAC'+node.mac);
 	$('#networkNodeMap').append(elem);
 
 	document.addEventListener('dragexit', function(e) {
