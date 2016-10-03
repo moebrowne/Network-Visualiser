@@ -40,7 +40,7 @@ socket.on('client', function (client) {
 });
 
 function draw() {
-	setTimeout(function(){requestAnimationFrame(draw)}, 100);
+	requestAnimationFrame(draw);
 	render();
 }
 draw();
