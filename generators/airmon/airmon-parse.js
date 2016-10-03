@@ -10,9 +10,10 @@ var clients = {};
 
 io.on('connection', function(socket) {
 	console.log('User connected');
+});
 
-	fs.watch('airmondata-APs.csv', {}, function() {
-		fs.createReadStream('airmondata-APs.csv')
+fs.watch('airmondata-APs.csv', {}, function() {
+	fs.createReadStream('airmondata-APs.csv')
 		.pipe(csv())
 		.on('data', function (data) {
 
@@ -35,12 +36,12 @@ io.on('connection', function(socket) {
 
 			APs[macAddr] = AP;
 
-			socket.emit('AP', AP);
+			io.emit('AP', AP);
 		});
-	});
+});
 
-	fs.watch('airmondata-clients.csv', {}, function() {
-		fs.createReadStream('airmondata-clients.csv')
+fs.watch('airmondata-clients.csv', {}, function() {
+	fs.createReadStream('airmondata-clients.csv')
 		.pipe(csv())
 		.on('data', function (data) {
 			if (typeof data['Station MAC'] === 'undefined' || typeof data[' BSSID'] === 'undefined' || data[' BSSID'] === ' ' || data[' BSSID'] === ' (not associated) ') {
@@ -67,7 +68,6 @@ io.on('connection', function(socket) {
 
 			clients[clientMacAddr] = client;
 
-			socket.emit('client', client);
+			io.emit('client', client);
 		});
-	});
 });
