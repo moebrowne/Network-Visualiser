@@ -66,7 +66,7 @@ function drawAP(AP) {
 
 	// Set the node (and connecting line) colour based on the time the node was last seen
 	let nodeColour = '#FFFFFF';
-	if ((Date.now()/1000)-AP.lastSeen > 120) {
+	if (AP.active !== true) {
 		nodeColour = '#777777';
 	}
 
@@ -110,7 +110,7 @@ function drawAPClients(AP) {
 
 		// Set the node (and connecting line) colour based on the time the node was last seen
 		let nodeColour = '#FFFFFF';
-		if ((Date.now()/1000)-client.lastSeen > 120) {
+		if (client.active !== true) {
 			nodeColour = '#777777';
 		}
 
