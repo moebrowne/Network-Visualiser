@@ -63,7 +63,22 @@ function render() {
 
 function drawAP(AP) {
 
-	drawNode(AP);
+	// Set the node (and connecting line) colour based on the time the node was last seen
+	let nodeColour = '#FFFFFF';
+	if ((Date.now()/1000)-AP.lastSeen > 120) {
+		nodeColour = '#FF7777';
+	}
+
+	// Draw the node
+	canvasContext.save();
+	canvasContext.beginPath();
+	canvasContext.translate(AP.position.x, AP.position.y);
+	canvasContext.rotate(toRadians(AP.rotate));
+	canvasContext.rect(-AP.size/2, -AP.size/2, AP.size, AP.size);
+	canvasContext.strokeStyle = nodeColour;
+	canvasContext.stroke();
+	canvasContext.closePath();
+	canvasContext.restore();
 
 	if (typeof AP.clients !== 'undefined') {
 		drawAPClients(AP);
@@ -93,46 +108,40 @@ function drawAPClients(AP) {
 			y: AP.position.y + (clientNodeDistance * Math.sin(toRadians(angle)))
 		};
 
-		client.rotate = angle;
+		// Set the node (and connecting line) colour based on the time the node was last seen
+		let nodeColour = '#FFFFFF';
+		if ((Date.now()/1000)-client.lastSeen > 120) {
+			nodeColour = '#777777';
+		}
 
-		drawNode(client, AP);
+		var w = client.size;
+		var h = w * (Math.sqrt(3)/2);
+
+		// Draw the node
+		canvasContext.save();
+		canvasContext.beginPath();
+		canvasContext.translate(client.position.x, client.position.y);
+		canvasContext.rotate(toRadians(client.rotate));
+		canvasContext.strokeStyle = nodeColour;
+		canvasContext.moveTo(0, (-2/3)*h);
+		canvasContext.lineTo(w / 2, h / 3);
+		canvasContext.lineTo(-w / 2, h / 3);
+		canvasContext.closePath();
+		canvasContext.stroke();
+		canvasContext.restore();
+
+		linkNodes(AP, client);
 	}
 
 }
 
-
-function drawNode(node, linkTo) {
-
-	// Draw the HTML element mask
-	drawHTMLNode(node);
-
-	// Set the node (and connecting line) colour based on the time the node was last seen
-	let nodeColour = '#FFFFFF';
-	if ((Date.now()/1000)-node.lastSeen > 120) {
-		nodeColour = '#777777';
-	}
-
-	// Draw the node
-	canvasContext.save();
+function linkNodes(node, linkToNode) {
 	canvasContext.beginPath();
-	canvasContext.translate(node.position.x, node.position.y);
-	canvasContext.rotate(node.rotate*Math.PI/180);
-	canvasContext.rect(-node.size/2, -node.size/2, node.size, node.size);
-	canvasContext.strokeStyle = nodeColour;
+	canvasContext.moveTo(linkToNode.position.x, linkToNode.position.y);
+	canvasContext.lineTo(node.position.x, node.position.y);
+	canvasContext.strokeStyle = '#FFFFFF';
 	canvasContext.stroke();
-	canvasContext.fill();
 	canvasContext.closePath();
-	canvasContext.restore();
-
-	if (typeof linkTo !== 'undefined') {
-
-		canvasContext.beginPath();
-		canvasContext.moveTo(linkTo.position.x, linkTo.position.y);
-		canvasContext.lineTo(node.position.x, node.position.y);
-		canvasContext.strokeStyle = nodeColour;
-		canvasContext.stroke();
-		canvasContext.closePath();
-	}
 }
 
 function drawHTMLNode(node) {
