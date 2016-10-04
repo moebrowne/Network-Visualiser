@@ -34,6 +34,10 @@ fs.watch('airmondata-APs.csv', {}, function() {
 				'size': 10
 			};
 
+			if (JSON.stringify(AP) === JSON.stringify(APs[macAddr])) {
+				return;
+			}
+
 			APs[macAddr] = AP;
 
 			io.emit('AP', AP);
@@ -65,6 +69,10 @@ fs.watch('airmondata-clients.csv', {}, function() {
 				'lastSeenSeconds': (timestampNow-timestampLastSeen),
 				'size': 5
 			};
+
+			if (JSON.stringify(client) === JSON.stringify(clients[clientMacAddr])) {
+				return;
+			}
 
 			clients[clientMacAddr] = client;
 
