@@ -66,7 +66,7 @@ function drawAP(AP) {
 	// Set the node (and connecting line) colour based on the time the node was last seen
 	let nodeColour = '#FFFFFF';
 	if ((Date.now()/1000)-AP.lastSeen > 120) {
-		nodeColour = '#FF7777';
+		nodeColour = '#777777';
 	}
 
 	// Draw the node
