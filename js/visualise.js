@@ -112,7 +112,7 @@ function drawNode(node, linkTo) {
 
 	// Set the node (and connecting line) colour based on the time the node was last seen
 	let nodeColour = '#FFFFFF';
-	if (node.lastSeenSeconds > 120) {
+	if (node.lastSeen > 120) {
 		nodeColour = '#777777';
 	}
 
