@@ -31,6 +31,7 @@ fs.watch('airmondata-APs.csv', {}, function() {
 				'SSID': SSID,
 				'power': data[' Power'],
 				'active': (secondsLastSeen < 120),
+				'encryption': data[' Privacy'],
 				'size': Math.max(10,Math.round((60-parseInt(data[' Power']))/3))
 			};
 
