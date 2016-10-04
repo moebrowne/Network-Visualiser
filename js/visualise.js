@@ -95,10 +95,6 @@ function drawAPClients(AP) {
 
 		client.rotate = angle;
 
-		// Adjust the position of the client nodes to line up with the AP
-		client.position.x += (client.size/2);
-		client.position.y += (client.size/2);
-
 		drawNode(client, AP);
 	}
 
@@ -106,12 +102,6 @@ function drawAPClients(AP) {
 
 
 function drawNode(node, linkTo) {
-
-	// Calculate the centre of the node
-	node.centre = {
-		x: node.position.x+(node.size/2),
-		y: node.position.y+(node.size/2)
-	};
 
 	// Draw the HTML element mask
 	drawHTMLNode(node);
@@ -125,7 +115,7 @@ function drawNode(node, linkTo) {
 	// Draw the node
 	canvasContext.save();
 	canvasContext.beginPath();
-	canvasContext.translate(node.centre.x, node.centre.y);
+	canvasContext.translate(node.position.x, node.position.y);
 	canvasContext.rotate(node.rotate*Math.PI/180);
 	canvasContext.rect(-node.size/2, -node.size/2, node.size, node.size);
 	canvasContext.strokeStyle = nodeColour;
@@ -137,8 +127,8 @@ function drawNode(node, linkTo) {
 	if (typeof linkTo !== 'undefined') {
 
 		canvasContext.beginPath();
-		canvasContext.moveTo(linkTo.centre.x, linkTo.centre.y);
-		canvasContext.lineTo(node.centre.x, node.centre.y);
+		canvasContext.moveTo(linkTo.position.x, linkTo.position.y);
+		canvasContext.lineTo(node.position.x, node.position.y);
 		canvasContext.strokeStyle = nodeColour;
 		canvasContext.stroke();
 		canvasContext.closePath();
