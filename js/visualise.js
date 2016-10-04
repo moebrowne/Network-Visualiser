@@ -65,9 +65,12 @@ function render() {
 function drawAP(AP) {
 
 	// Set the node (and connecting line) colour based on the time the node was last seen
-	let nodeColour = '#FFFFFF';
+	let nodeStrokeColour = '#FFFFFF';
 	if (AP.active !== true) {
-		nodeColour = '#777777';
+		nodeStrokeColour = '#777777';
+	}
+	if (AP.encryption.indexOf('WPA2') === -1) {
+		nodeStrokeColour = '#550000';
 	}
 
 	// Draw the node
@@ -76,7 +79,7 @@ function drawAP(AP) {
 	canvasContext.translate(AP.position.x, AP.position.y);
 	canvasContext.rotate(toRadians(AP.rotate));
 	canvasContext.rect(-AP.size/2, -AP.size/2, AP.size, AP.size);
-	canvasContext.strokeStyle = nodeColour;
+	canvasContext.strokeStyle = nodeStrokeColour;
 	canvasContext.stroke();
 	canvasContext.fill();
 	canvasContext.closePath();
