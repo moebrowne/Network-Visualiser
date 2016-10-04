@@ -22,6 +22,7 @@ fs.watch('airmondata-APs.csv', {}, function() {
 			}
 
 			let timestampLastSeen = (Date.parse(data[' Last time seen'])/1000);
+			let secondsLastSeen = (Date.now()/1000)-timestampLastSeen;
 
 			var macAddr = data['BSSID'].replace(' ', '');
 			var SSID = data[' ESSID'];
@@ -29,7 +30,7 @@ fs.watch('airmondata-APs.csv', {}, function() {
 				'mac': macAddr,
 				'SSID': SSID,
 				'power': data[' Power'],
-				'lastSeen': timestampLastSeen,
+				'active': (secondsLastSeen < 120),
 				'size': Math.max(10,Math.round((60-parseInt(data[' Power']))/3))
 			};
 
@@ -59,12 +60,13 @@ fs.watch('airmondata-clients.csv', {}, function() {
 			}
 
 			let timestampLastSeen = (Date.parse(data[' Last time seen'])/1000);
+			let secondsLastSeen = (Date.now()/1000)-timestampLastSeen;
 
 			var client = {
 				'mac': clientMacAddr,
 				'AP': APMacAddr,
 				'power': data[' Power'],
-				'lastSeen': timestampLastSeen,
+				'active': (secondsLastSeen < 120),
 				'size': 12
 			};
 
