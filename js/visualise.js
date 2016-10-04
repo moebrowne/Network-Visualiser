@@ -135,10 +135,15 @@ function drawAPClients(AP) {
 }
 
 function linkNodes(node, linkToNode) {
+
+	let linkColour = '#FFFFFF';
+	if (node.active !== true || linkToNode.active !== true) {
+		linkColour = '#777777';
+	}
 	canvasContext.beginPath();
 	canvasContext.moveTo(linkToNode.position.x, linkToNode.position.y);
 	canvasContext.lineTo(node.position.x, node.position.y);
-	canvasContext.strokeStyle = '#FFFFFF';
+	canvasContext.strokeStyle = linkColour;
 	canvasContext.stroke();
 	canvasContext.closePath();
 }
