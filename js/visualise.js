@@ -92,7 +92,7 @@ function drawAPClients(AP) {
 		return;
 	}
 
-	var clientNodeDistance = 50;
+	var clientNodeDistance = 58;
 	var angleDeg = (360 / clientCount);
 
 	var i = 0;
