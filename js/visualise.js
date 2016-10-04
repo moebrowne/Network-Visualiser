@@ -143,12 +143,17 @@ function linkNodes(node, linkToNode) {
 	if (node.active !== true || linkToNode.active !== true) {
 		linkColour = '#777777';
 	}
+
+	canvasContext.save();
 	canvasContext.beginPath();
 	canvasContext.moveTo(linkToNode.position.x, linkToNode.position.y);
 	canvasContext.lineTo(node.position.x, node.position.y);
+	canvasContext.setLineDash([4, 4]);
+	canvasContext.lineDashOffset = linkToNode.frames;
 	canvasContext.strokeStyle = linkColour;
 	canvasContext.stroke();
 	canvasContext.closePath();
+	canvasContext.restore();
 }
 
 function drawHTMLNode(node) {
