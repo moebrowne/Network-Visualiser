@@ -30,7 +30,7 @@ fs.watch('airmondata-APs.csv', {}, function() {
 				'SSID': SSID,
 				'power': data[' Power'],
 				'lastSeen': timestampLastSeen,
-				'size': 10
+				'size': Math.max(10,Math.round((60-parseInt(data[' Power']))/3))
 			};
 
 			if (JSON.stringify(AP) === JSON.stringify(APs[macAddr])) {
@@ -65,7 +65,7 @@ fs.watch('airmondata-clients.csv', {}, function() {
 				'AP': APMacAddr,
 				'power': data[' Power'],
 				'lastSeen': timestampLastSeen,
-				'size': 5
+				'size': 12
 			};
 
 			if (JSON.stringify(client) === JSON.stringify(clients[clientMacAddr])) {
