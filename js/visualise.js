@@ -57,6 +57,7 @@ function render() {
 
 	for (var APMac in APs) {
 		var AP = APs[APMac];
+		drawAPClients(AP);
 		drawAP(AP);
 	}
 }
@@ -77,12 +78,9 @@ function drawAP(AP) {
 	canvasContext.rect(-AP.size/2, -AP.size/2, AP.size, AP.size);
 	canvasContext.strokeStyle = nodeColour;
 	canvasContext.stroke();
+	canvasContext.fill();
 	canvasContext.closePath();
 	canvasContext.restore();
-
-	if (typeof AP.clients !== 'undefined') {
-		drawAPClients(AP);
-	}
 
 }
 
@@ -108,6 +106,8 @@ function drawAPClients(AP) {
 			y: AP.position.y + (clientNodeDistance * Math.sin(toRadians(angle)))
 		};
 
+		linkNodes(AP, client);
+
 		// Set the node (and connecting line) colour based on the time the node was last seen
 		let nodeColour = '#FFFFFF';
 		if ((Date.now()/1000)-client.lastSeen > 120) {
@@ -128,9 +128,8 @@ function drawAPClients(AP) {
 		canvasContext.lineTo(-w / 2, h / 3);
 		canvasContext.closePath();
 		canvasContext.stroke();
+		canvasContext.fill();
 		canvasContext.restore();
-
-		linkNodes(AP, client);
 	}
 
 }
