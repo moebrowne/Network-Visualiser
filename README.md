@@ -37,3 +37,20 @@ with older versions you will just be limited to 30 second refresh times.
 ```bash
 node airmon-parse.js
 ```
+
+## IW Scan
+
+IW Scan is s simple easier to run data source but it will only show you APs
+
+To run the IW Scan generator run the following commands in the `generators/iwscan` directory
+
+##### 1.  Run the Node server
+
+```bash
+node iwscan.js wlan0
+```
+
+Notes:
+
+- Replace wlan0 with the interface you want to scan.
+- It's recommended to run is as root (`sudo`) else you wont be able to do an active scan.
