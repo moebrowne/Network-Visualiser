@@ -67,6 +67,7 @@ fs.watch('airmondata-clients.csv', {}, function() {
 				'mac': clientMacAddr,
 				'AP': APMacAddr,
 				'power': data[' Power'],
+				'frames': parseInt(data[' # packets']),
 				'active': (secondsLastSeen < 120),
 				'size': 12
 			};

@@ -42,6 +42,15 @@ socket.on('client', function (client) {
 		return;
 	}
 
+	if (typeof APs[client.AP].clients[client.mac] === 'undefined') {
+		client.lastFrames = 101;
+		client.lastFramesCount = 0;
+	}
+	else if (client.frames > APs[client.AP].clients[client.mac].frames) {
+		client.lastFrames = 0;
+		client.lastFramesCount = APs[client.AP].clients[client.mac].lastFramesCount;
+	}
+
 	APs[client.AP].clients[client.mac] = client;
 });
 
@@ -57,6 +66,12 @@ function render() {
 
 	for (var APMac in APs) {
 		var AP = APs[APMac];
+
+		if (Object.keys(AP.clients).length === 0) {
+			// Show only APs with connected clients
+			//continue;
+		}
+
 		drawAPClients(AP);
 		drawAP(AP);
 	}
@@ -139,16 +154,31 @@ function drawAPClients(AP) {
 
 function linkNodes(node, linkToNode) {
 
-	let linkColour = '#FFFFFF';
-	if (node.active !== true || linkToNode.active !== true) {
-		linkColour = '#777777';
-	}
+	canvasContext.save();
 	canvasContext.beginPath();
 	canvasContext.moveTo(linkToNode.position.x, linkToNode.position.y);
 	canvasContext.lineTo(node.position.x, node.position.y);
-	canvasContext.strokeStyle = linkColour;
+	canvasContext.strokeStyle = '#555';
 	canvasContext.stroke();
 	canvasContext.closePath();
+	canvasContext.restore();
+
+
+	if (linkToNode.lastFrames++ < 60) {
+		linkToNode.lastFramesCount +=2;
+
+		canvasContext.save();
+		canvasContext.beginPath();
+		canvasContext.moveTo(linkToNode.position.x, linkToNode.position.y);
+		canvasContext.lineTo(node.position.x, node.position.y);
+		canvasContext.setLineDash([4, 50]);
+		canvasContext.lineDashOffset = linkToNode.lastFramesCount;
+		canvasContext.strokeStyle = '#FFF';
+		canvasContext.stroke();
+		canvasContext.closePath();
+		canvasContext.restore();
+	}
+
 }
 
 function drawHTMLNode(node) {
