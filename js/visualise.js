@@ -6,68 +6,214 @@ var canvasContext = canvas.getContext('2d');
 canvasContext.fillStyle = '#333';
 canvasContext.strokeStyle = '#FFF';
 
-$.getJSON( "nodes.json", function( data ) {
-	drawNodes(data);
-});
+var APs = {};
 
-function drawNodes(nodes, parent) {
+var socket = io('//:3000');
 
-	for (var i=0; i<nodes.length; i++) {
+socket.on('AP', function (AP) {
 
-		var node = nodes[i];
+	if (typeof APs[AP.mac] === 'undefined') {
 
-		// If a position hasn't be defined arrange all the sub nodes equally around the parent
-		if (typeof node.position === 'undefined' && typeof parent !== 'undefined') {
-			var angleDeg = ((360/nodes.length)*i)-90;
-			node.position = {
-				x: parent.position.x + (node.distance * Math.cos(toRadians(angleDeg))),
-				y: parent.position.y + node.distance * Math.sin(toRadians(angleDeg))
-			}
-		}
-
-		// If this node is a child offset it so it aligns with the parent
-		if (typeof parent !== 'undefined') {
-			node.position.x += (node.size/2);
-			node.position.y += (node.size/2);
-		}
-
-		// Calculate the centre of the node
-		node.centre = {
-			x: node.position.x+(node.size/2),
-			y: node.position.y+(node.size/2)
+		AP.position = {
+			x: getRandomArbitrary(60, canvas.width-60),
+			y: getRandomArbitrary(60, canvas.height-60)
 		};
 
-		// Draw the HTML element mask
-		drawHTMLNode(node);
+		AP.rotate = 0;
 
-		// Check if this node is a child element and therefore needs linking to its parent
-		if (typeof parent !== 'undefined') {
-			canvasContext.beginPath();
-			canvasContext.moveTo((parent.position.x+(parent.size/2)),(parent.position.y+(parent.size/2)));
-			canvasContext.lineTo(node.centre.x, node.centre.y);
-			canvasContext.stroke();
+		APs[AP.mac] = AP;
+
+		APs[AP.mac].clients = {};
+	}
+	else {
+		var clients = APs[AP.mac].clients;
+		var position = APs[AP.mac].position;
+
+		APs[AP.mac] = AP;
+		APs[AP.mac].clients = clients;
+		APs[AP.mac].position = position;
+	}
+
+});
+
+socket.on('client', function (client) {
+	if (typeof APs[client.AP] === "undefined") {
+		//drawNode(client);
+		return;
+	}
+
+	if (typeof APs[client.AP].clients[client.mac] === 'undefined') {
+		client.lastFrames = 101;
+		client.lastFramesCount = 0;
+	}
+	else if (client.frames > APs[client.AP].clients[client.mac].frames) {
+		client.lastFrames = 0;
+		client.lastFramesCount = APs[client.AP].clients[client.mac].lastFramesCount;
+	}
+
+	APs[client.AP].clients[client.mac] = client;
+});
+
+function draw() {
+	requestAnimationFrame(draw);
+	render();
+}
+draw();
+
+
+function render() {
+	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+	for (var APMac in APs) {
+		var AP = APs[APMac];
+
+		if (Object.keys(AP.clients).length === 0) {
+			// Show only APs with connected clients
+			//continue;
 		}
 
-		// Check if there are children to draw
-		if (typeof node.subnodes !== 'undefined') {
-			drawNodes(node.subnodes, node);
+		drawAPClients(AP);
+		drawAP(AP);
+	}
+}
+
+function drawAP(AP) {
+
+	// Set the node (and connecting line) colour based on the time the node was last seen
+	let nodeStrokeColour = '#FFFFFF';
+	if (AP.active !== true) {
+		nodeStrokeColour = '#777777';
+	}
+	if (AP.encryption.indexOf('WPA2') === -1) {
+		nodeStrokeColour = '#550000';
+	}
+
+	// Draw the node
+	canvasContext.save();
+	canvasContext.beginPath();
+	canvasContext.translate(AP.position.x, AP.position.y);
+	canvasContext.rotate(toRadians(AP.rotate));
+	canvasContext.rect(-AP.size/2, -AP.size/2, AP.size, AP.size);
+	canvasContext.strokeStyle = nodeStrokeColour;
+	canvasContext.stroke();
+	canvasContext.fill();
+	canvasContext.closePath();
+	canvasContext.restore();
+
+}
+
+function drawAPClients(AP) {
+
+	var clientCount = Object.keys(AP.clients).length;
+
+	if (clientCount === 0) {
+		return;
+	}
+
+	var clientNodeDistance = 58;
+	var angleDeg = (360 / clientCount);
+
+	var i = 0;
+	for (var clientMac in AP.clients) {
+
+		var client = AP.clients[clientMac];
+		var angle = (angleDeg * i++) - 90;
+
+		client.position = {
+			x: AP.position.x + (clientNodeDistance * Math.cos(toRadians(angle))),
+			y: AP.position.y + (clientNodeDistance * Math.sin(toRadians(angle)))
+		};
+
+		linkNodes(AP, client);
+
+		// Set the node (and connecting line) colour based on the time the node was last seen
+		let nodeColour = '#FFFFFF';
+		if (client.active !== true) {
+			nodeColour = '#777777';
 		}
+
+		var w = client.size;
+		var h = w * (Math.sqrt(3)/2);
 
 		// Draw the node
-		canvasContext.rect(node.position.x, node.position.y, node.size, node.size);
+		canvasContext.save();
+		canvasContext.beginPath();
+		canvasContext.translate(client.position.x, client.position.y);
+		canvasContext.rotate(toRadians(client.rotate));
+		canvasContext.strokeStyle = nodeColour;
+		canvasContext.moveTo(0, (-2/3)*h);
+		canvasContext.lineTo(w / 2, h / 3);
+		canvasContext.lineTo(-w / 2, h / 3);
+		canvasContext.closePath();
 		canvasContext.stroke();
 		canvasContext.fill();
+		canvasContext.restore();
+	}
 
+}
+
+function linkNodes(node, linkToNode) {
+
+	canvasContext.save();
+	canvasContext.beginPath();
+	canvasContext.moveTo(linkToNode.position.x, linkToNode.position.y);
+	canvasContext.lineTo(node.position.x, node.position.y);
+	canvasContext.strokeStyle = '#555';
+	canvasContext.stroke();
+	canvasContext.closePath();
+	canvasContext.restore();
+
+
+	if (linkToNode.lastFrames++ < 60) {
+		linkToNode.lastFramesCount +=2;
+
+		canvasContext.save();
+		canvasContext.beginPath();
+		canvasContext.moveTo(linkToNode.position.x, linkToNode.position.y);
+		canvasContext.lineTo(node.position.x, node.position.y);
+		canvasContext.setLineDash([4, 50]);
+		canvasContext.lineDashOffset = linkToNode.lastFramesCount;
+		canvasContext.strokeStyle = '#FFF';
+		canvasContext.stroke();
+		canvasContext.closePath();
+		canvasContext.restore();
 	}
 
 }
 
 function drawHTMLNode(node) {
-	var elem = $('<div/>').css({position: 'absolute', left: node.position.x, top: node.position.y, width: node.size, height: node.size, cursor: 'pointer'});
+
+	if (node.hasHTMLElement === true) {
+		return;
+	}
+
+	var elem = $('<div/>')
+		.css({position: 'absolute', left: node.position.x, top: node.position.y, width: node.size, height: node.size, cursor: 'pointer'})
+		.attr('title', node.SSID)
+		.attr('id', 'MAC'+node.mac);
 	$('#networkNodeMap').append(elem);
+
+	document.addEventListener('dragexit', function(e) {
+		var node = nodeLookup[this.getAttribute('id')];
+
+		console.log(node);
+
+		node.position = {
+			x: e.pageX,
+			y: e.pageY
+		};
+
+		drawAllNodes();
+	}, false);
+
+	node.hasHTMLElement = true;
 
 }
 
 function toRadians (angle) {
 	return angle * (Math.PI / 180);
+}
+
+function getRandomArbitrary(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
