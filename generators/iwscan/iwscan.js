@@ -5,7 +5,7 @@ var iwconfig = require('wireless-tools/iwconfig');
 var iwlist = require('wireless-tools/iwlist');
 var fs = require('fs');
 
-var interfaceName = 'wlan9';
+var interfaceName = process.argv[2];
 
 var APs = {};
 var data = [];
