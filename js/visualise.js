@@ -181,35 +181,6 @@ function linkNodes(node, linkToNode) {
 
 }
 
-function drawHTMLNode(node) {
-
-	if (node.hasHTMLElement === true) {
-		return;
-	}
-
-	var elem = $('<div/>')
-		.css({position: 'absolute', left: node.position.x, top: node.position.y, width: node.size, height: node.size, cursor: 'pointer'})
-		.attr('title', node.SSID)
-		.attr('id', 'MAC'+node.mac);
-	$('#networkNodeMap').append(elem);
-
-	document.addEventListener('dragexit', function(e) {
-		var node = nodeLookup[this.getAttribute('id')];
-
-		console.log(node);
-
-		node.position = {
-			x: e.pageX,
-			y: e.pageY
-		};
-
-		drawAllNodes();
-	}, false);
-
-	node.hasHTMLElement = true;
-
-}
-
 function toRadians (angle) {
 	return angle * (Math.PI / 180);
 }
