@@ -5,7 +5,7 @@ var iwconfig = require('wireless-tools/iwconfig');
 var iwlist = require('wireless-tools/iwlist');
 var fs = require('fs');
 
-var interfaceName = 'wlan0';
+var interfaceName = 'wlan9';
 
 var APs = {};
 var data = [];
@@ -15,9 +15,16 @@ io.on('connection', function(socket) {
 });
 
 iwconfig.status(interfaceName, function(err, status) {
+	scan();
+});
+
+function scan() {
 
 	iwlist.scan(interfaceName, function(err, networks) {
-		console.log(networks);
+
+		if (typeof networks === 'undefined') {
+			return;
+		}
 
 		for (var i=0; i < networks.length; i++) {
 
@@ -26,19 +33,21 @@ iwconfig.status(interfaceName, function(err, status) {
 				'SSID': networks[i].ssid,
 				//'power': data[' Power'],
 				//'active': (secondsLastSeen < 120),
-				'encryption': networks[i].security,
+				'encryption': networks[i].security.toUpperCase(),
 				'size': Math.max(10,Math.round((60-parseInt(networks[i].signal))/3))
 			};
 
-			if (JSON.stringify(AP) === JSON.stringify(APs[AP.SSID])) {
+			if (JSON.stringify(AP) === JSON.stringify(APs[AP.mac])) {
 				return;
 			}
 
-			APs[AP.SSID] = AP;
+			APs[AP.mac] = AP;
 
-			console.log(networks[i]);
+			io.emit('AP', AP);
+			console.log(AP);
 		}
 
 	});
 
-});
+	setTimeout(scan, 1000);
+}
