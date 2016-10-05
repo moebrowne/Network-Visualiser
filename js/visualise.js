@@ -49,7 +49,6 @@ socket.on('client', function (client) {
 	else if (client.frames > APs[client.AP].clients[client.mac].frames) {
 		client.lastFrames = 0;
 		client.lastFramesCount = APs[client.AP].clients[client.mac].lastFramesCount;
-		console.log(client);
 	}
 
 	APs[client.AP].clients[client.mac] = client;
@@ -69,7 +68,8 @@ function render() {
 		var AP = APs[APMac];
 
 		if (Object.keys(AP.clients).length === 0) {
-			continue;
+			// Show only APs with connected clients
+			//continue;
 		}
 
 		drawAPClients(AP);
