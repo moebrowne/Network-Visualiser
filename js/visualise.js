@@ -3,8 +3,6 @@ document.getElementById('network').height = window.innerHeight;
 
 var canvas = document.getElementById('network');
 var canvasContext = canvas.getContext('2d');
-canvasContext.fillStyle = '#333';
-canvasContext.strokeStyle = '#FFF';
 
 var APs = {};
 
@@ -116,6 +114,7 @@ function drawAP(AP) {
 	canvasContext.rect(-AP.size/2, -AP.size/2, AP.size, AP.size);
 	canvasContext.strokeStyle = nodeStrokeColour;
 	canvasContext.stroke();
+	canvasContext.fillStyle = '#333';
 	canvasContext.fill();
 	canvasContext.closePath();
 	canvasContext.restore();
@@ -166,6 +165,7 @@ function drawAPClients(AP) {
 		canvasContext.lineTo(-w / 2, h / 3);
 		canvasContext.closePath();
 		canvasContext.stroke();
+		canvasContext.fillStyle = '#333';
 		canvasContext.fill();
 		canvasContext.restore();
 	}
