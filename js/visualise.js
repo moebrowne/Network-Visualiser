@@ -46,6 +46,10 @@ function addAP(AP) {
 }
 
 socket.on('client', function (client) {
+	addClient(client);
+});
+
+function addClient(client) {
 	if (typeof APs[client.AP] === "undefined") {
 		//drawNode(client);
 		return;
@@ -61,7 +65,7 @@ socket.on('client', function (client) {
 	}
 
 	APs[client.AP].clients[client.mac] = client;
-});
+}
 
 function draw() {
 	requestAnimationFrame(draw);
