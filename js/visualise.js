@@ -45,6 +45,13 @@ function addAP(AP) {
 	}
 }
 
+// A bulk update of Clients
+socket.on('clients', function(currentClients) {
+	for (var clientMac in currentClients) {
+		addClient(currentClients[clientMac])
+	}
+});
+
 socket.on('client', function (client) {
 	addClient(client);
 });
