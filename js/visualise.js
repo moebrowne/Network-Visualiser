@@ -11,12 +11,15 @@ var APs = {};
 var socket = io('//:3000');
 
 socket.on('AP', function (AP) {
+	addAP(AP);
+});
 
+function addAP(AP) {
 	if (typeof APs[AP.mac] === 'undefined') {
 
 		AP.position = {
-			x: getRandomArbitrary(60, canvas.width-60),
-			y: getRandomArbitrary(60, canvas.height-60)
+			x: getRandomArbitrary(60, canvas.width - 60),
+			y: getRandomArbitrary(60, canvas.height - 60)
 		};
 
 		AP.rotate = 0;
@@ -33,8 +36,7 @@ socket.on('AP', function (AP) {
 		APs[AP.mac].clients = clients;
 		APs[AP.mac].position = position;
 	}
-
-});
+}
 
 socket.on('client', function (client) {
 	if (typeof APs[client.AP] === "undefined") {
