@@ -10,6 +10,10 @@ var clients = {};
 
 io.on('connection', function(socket) {
 	console.log('User connected');
+
+	// Send the client the current set of APs and clients
+	socket.emit('APs', APs);
+	socket.emit('clients', clients);
 });
 
 fs.watch('airmondata-APs.csv', {}, function() {
