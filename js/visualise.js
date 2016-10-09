@@ -1,8 +1,18 @@
-document.getElementById('network').width = window.innerWidth;
-document.getElementById('network').height = window.innerHeight;
-
 var canvas = document.getElementById('network');
 var canvasContext = canvas.getContext('2d');
+
+function expandCanvasToWindow() {
+	document.getElementById('network').width = window.innerWidth;
+	canvasContext.canvas.width = window.innerWidth;
+
+	document.getElementById('network').height = window.innerHeight;
+	canvasContext.canvas.height = window.innerHeight;
+}
+expandCanvasToWindow();
+
+window.addEventListener('resize', function() {
+	expandCanvasToWindow();
+});
 
 var APs = {};
 
