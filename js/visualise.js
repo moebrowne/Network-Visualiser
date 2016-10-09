@@ -10,6 +10,13 @@ var APs = {};
 
 var socket = io('//:3000');
 
+// A bulk update of APs
+socket.on('APs', function(currentAPs) {
+	for (var APMac in currentAPs) {
+		addAP(currentAPs[APMac])
+	}
+});
+
 socket.on('AP', function (AP) {
 	addAP(AP);
 });
