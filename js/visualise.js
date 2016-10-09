@@ -10,9 +10,7 @@ function expandCanvasToWindow() {
 }
 expandCanvasToWindow();
 
-window.addEventListener('resize', function() {
-	expandCanvasToWindow();
-});
+window.addEventListener('resize', debounce(expandCanvasToWindow, 200));
 
 var APs = {};
 
