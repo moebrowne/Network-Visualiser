@@ -10,13 +10,23 @@ var APs = {};
 
 var socket = io('//:3000');
 
-socket.on('AP', function (AP) {
+// A bulk update of APs
+socket.on('APs', function(currentAPs) {
+	for (var APMac in currentAPs) {
+		addAP(currentAPs[APMac])
+	}
+});
 
+socket.on('AP', function (AP) {
+	addAP(AP);
+});
+
+function addAP(AP) {
 	if (typeof APs[AP.mac] === 'undefined') {
 
 		AP.position = {
-			x: getRandomArbitrary(60, canvas.width-60),
-			y: getRandomArbitrary(60, canvas.height-60)
+			x: getRandomArbitrary(60, canvas.width - 60),
+			y: getRandomArbitrary(60, canvas.height - 60)
 		};
 
 		AP.rotate = 0;
@@ -33,10 +43,20 @@ socket.on('AP', function (AP) {
 		APs[AP.mac].clients = clients;
 		APs[AP.mac].position = position;
 	}
+}
 
+// A bulk update of Clients
+socket.on('clients', function(currentClients) {
+	for (var clientMac in currentClients) {
+		addClient(currentClients[clientMac])
+	}
 });
 
 socket.on('client', function (client) {
+	addClient(client);
+});
+
+function addClient(client) {
 	if (typeof APs[client.AP] === "undefined") {
 		//drawNode(client);
 		return;
@@ -52,7 +72,7 @@ socket.on('client', function (client) {
 	}
 
 	APs[client.AP].clients[client.mac] = client;
-});
+}
 
 function draw() {
 	requestAnimationFrame(draw);
