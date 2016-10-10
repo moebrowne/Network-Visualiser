@@ -5,6 +5,8 @@ var csv = require('csv-parser');
 var fs = require('fs');
 require('datejs');
 
+var wirelessAP = require('./wirelessAP');
+
 var APs = {};
 var clients = {};
 
@@ -21,31 +23,20 @@ fs.watch('airmondata-APs.csv', {}, function() {
 		.pipe(csv())
 		.on('data', function (data) {
 
-			if (typeof data['BSSID'] === 'undefined') {
-				return;
+			if (typeof data['BSSID'] === 'undefined') return;
+
+			let macAddr = data['BSSID'].trim();
+			if (typeof APs[macAddr] === 'undefined') {
+				APs[macAddr] = new wirelessAP();
 			}
 
-			let timestampLastSeen = (Date.parse(data[' Last time seen'])/1000);
-			let secondsLastSeen = (Date.now()/1000)-timestampLastSeen;
+			let AP = APs[macAddr];
 
-			var macAddr = data['BSSID'].replace(' ', '');
-			var SSID = data[' ESSID'];
-			var AP = {
-				'mac': macAddr,
-				'SSID': SSID,
-				'power': data[' Power'],
-				'active': (secondsLastSeen < 120),
-				'encryption': data[' Privacy'],
-				'size': Math.max(10,Math.round((60-parseInt(data[' Power']))/3))
-			};
+			AP.update(data);
 
-			if (JSON.stringify(AP) === JSON.stringify(APs[macAddr])) {
-				return;
+			if (AP.lastUpdateChangedNodeData) {
+				io.emit('AP', AP.nodeData);
 			}
-
-			APs[macAddr] = AP;
-
-			io.emit('AP', AP);
 		});
 });
 
