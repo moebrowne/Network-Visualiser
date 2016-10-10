@@ -13,8 +13,15 @@ var clients = {};
 io.on('connection', function(socket) {
 	console.log('User connected');
 
-	// Send the client the current set of APs and clients
-	socket.emit('APs', APs);
+	// Get all the AP node data
+	let APNodeData = {};
+	for (var macAddr in APs) {
+		if (!APs.hasOwnProperty(macAddr)) continue;
+		APNodeData[macAddr] = APs[macAddr].nodeData;
+	}
+	socket.emit('APs', APNodeData);
+
+
 	socket.emit('clients', clients);
 });
 
