@@ -5,15 +5,30 @@ var csv = require('csv-parser');
 var fs = require('fs');
 require('datejs');
 
+var wirelessAP = require('./wirelessAP');
+var wirelessClient = require('./wirelessClient');
+
 var APs = {};
 var clients = {};
 
 io.on('connection', function(socket) {
 	console.log('User connected');
 
-	// Send the client the current set of APs and clients
-	socket.emit('APs', APs);
-	socket.emit('clients', clients);
+	// Get all the AP node data
+	let APNodeData = {};
+	for (var APMacAddr in APs) {
+		if (!APs.hasOwnProperty(APMacAddr)) continue;
+		APNodeData[APMacAddr] = APs[APMacAddr].nodeData;
+	}
+	socket.emit('APs', APNodeData);
+
+	// Get all the client node data
+	let clientNodeData = {};
+	for (var clientMacAddr in clients) {
+		if (!clients.hasOwnProperty(clientMacAddr)) continue;
+		clientNodeData[clientMacAddr] = clients[clientMacAddr].nodeData;
+	}
+	socket.emit('clients', clientNodeData);
 });
 
 fs.watch('airmondata-APs.csv', {}, function() {
@@ -21,31 +36,20 @@ fs.watch('airmondata-APs.csv', {}, function() {
 		.pipe(csv())
 		.on('data', function (data) {
 
-			if (typeof data['BSSID'] === 'undefined') {
-				return;
+			if (typeof data['BSSID'] === 'undefined') return;
+
+			let macAddr = data['BSSID'].trim();
+			if (typeof APs[macAddr] === 'undefined') {
+				APs[macAddr] = new wirelessAP();
 			}
 
-			let timestampLastSeen = (Date.parse(data[' Last time seen'])/1000);
-			let secondsLastSeen = (Date.now()/1000)-timestampLastSeen;
+			let AP = APs[macAddr];
 
-			var macAddr = data['BSSID'].replace(' ', '');
-			var SSID = data[' ESSID'];
-			var AP = {
-				'mac': macAddr,
-				'SSID': SSID,
-				'power': data[' Power'],
-				'active': (secondsLastSeen < 120),
-				'encryption': data[' Privacy'],
-				'size': Math.max(10,Math.round((60-parseInt(data[' Power']))/3))
-			};
+			AP.update(data);
 
-			if (JSON.stringify(AP) === JSON.stringify(APs[macAddr])) {
-				return;
+			if (AP.lastUpdateChangedNodeData) {
+				io.emit('AP', AP.nodeData);
 			}
-
-			APs[macAddr] = AP;
-
-			io.emit('AP', AP);
 		});
 });
 
@@ -57,31 +61,17 @@ fs.watch('airmondata-clients.csv', {}, function() {
 				return;
 			}
 
-			var APMacAddr = data[' BSSID'].replace(' ', '');
-			var clientMacAddr = data['Station MAC'].replace(' ', '');
-
-			if (typeof APs[APMacAddr] === 'undefined') {
-				return;
+			let clientMac = data['Station MAC'].trim();
+			if (typeof clients[clientMac] === 'undefined') {
+				clients[clientMac] = new wirelessClient();
 			}
 
-			let timestampLastSeen = (Date.parse(data[' Last time seen'])/1000);
-			let secondsLastSeen = (Date.now()/1000)-timestampLastSeen;
+			let client = clients[clientMac];
 
-			var client = {
-				'mac': clientMacAddr,
-				'AP': APMacAddr,
-				'power': data[' Power'],
-				'frames': parseInt(data[' # packets']),
-				'active': (secondsLastSeen < 120),
-				'size': 12
-			};
+			client.update(data);
 
-			if (JSON.stringify(client) === JSON.stringify(clients[clientMacAddr])) {
-				return;
+			if (client.lastUpdateChangedNodeData) {
+				io.emit('client', client.nodeData);
 			}
-
-			clients[clientMacAddr] = client;
-
-			io.emit('client', client);
 		});
 });
