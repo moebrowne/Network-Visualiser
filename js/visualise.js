@@ -2,10 +2,10 @@ var canvas = document.getElementById('network');
 var canvasContext = canvas.getContext('2d');
 
 function expandCanvasToWindow() {
-	document.getElementById('network').width = window.innerWidth;
+	canvas.width = window.innerWidth;
 	canvasContext.canvas.width = window.innerWidth;
 
-	document.getElementById('network').height = window.innerHeight;
+	canvas.height = window.innerHeight;
 	canvasContext.canvas.height = window.innerHeight;
 }
 expandCanvasToWindow();
