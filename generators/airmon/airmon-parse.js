@@ -16,14 +16,19 @@ io.on('connection', function(socket) {
 
 	// Get all the AP node data
 	let APNodeData = {};
-	for (var macAddr in APs) {
-		if (!APs.hasOwnProperty(macAddr)) continue;
-		APNodeData[macAddr] = APs[macAddr].nodeData;
+	for (var APMacAddr in APs) {
+		if (!APs.hasOwnProperty(APMacAddr)) continue;
+		APNodeData[APMacAddr] = APs[APMacAddr].nodeData;
 	}
 	socket.emit('APs', APNodeData);
 
-
-	socket.emit('clients', clients);
+	// Get all the client node data
+	let clientNodeData = {};
+	for (var clientMacAddr in clients) {
+		if (!clients.hasOwnProperty(clientMacAddr)) continue;
+		clientNodeData[clientMacAddr] = clients[clientMacAddr].nodeData;
+	}
+	socket.emit('clients', clientNodeData);
 });
 
 fs.watch('airmondata-APs.csv', {}, function() {
