@@ -6,6 +6,7 @@ var fs = require('fs');
 require('datejs');
 
 var wirelessAP = require('./wirelessAP');
+var wirelessClient = require('./wirelessClient');
 
 var APs = {};
 var clients = {};
@@ -55,31 +56,17 @@ fs.watch('airmondata-clients.csv', {}, function() {
 				return;
 			}
 
-			var APMacAddr = data[' BSSID'].replace(' ', '');
-			var clientMacAddr = data['Station MAC'].replace(' ', '');
-
-			if (typeof APs[APMacAddr] === 'undefined') {
-				return;
+			let clientMac = data['Station MAC'].trim();
+			if (typeof clients[clientMac] === 'undefined') {
+				clients[clientMac] = new wirelessClient();
 			}
 
-			let timestampLastSeen = (Date.parse(data[' Last time seen'])/1000);
-			let secondsLastSeen = (Date.now()/1000)-timestampLastSeen;
+			let client = clients[clientMac];
 
-			var client = {
-				'mac': clientMacAddr,
-				'AP': APMacAddr,
-				'power': data[' Power'],
-				'frames': parseInt(data[' # packets']),
-				'active': (secondsLastSeen < 120),
-				'size': 12
-			};
+			client.update(data);
 
-			if (JSON.stringify(client) === JSON.stringify(clients[clientMacAddr])) {
-				return;
+			if (client.lastUpdateChangedNodeData) {
+				io.emit('client', client.nodeData);
 			}
-
-			clients[clientMacAddr] = client;
-
-			io.emit('client', client);
 		});
 });
