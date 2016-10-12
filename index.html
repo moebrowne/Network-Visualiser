@@ -9,13 +9,49 @@
 			padding: 0;
 			overflow: hidden;
 		}
+
+		#network-container {
+			position: absolute;
+			top: 100px;
+			left: 0;
+			right: 0;
+			bottom: 0;
+		}
+
+		#network {
+			position: relative;
+			background-color: #333;
+		}
+
+		header {
+			position: absolute;
+			top: 0;
+			right: 0;
+			left: 0;
+			height: 100px;
+			background: #2e2e2e;
+		}
+
+		header h1 {
+			color: #FFF;
+			font-family: Ubuntu;
+			display: block;
+			float: left;
+			margin: 11px;
+			line-height: 38px;
+			font-size: 42px;
+		}
 	</style>
 </head>
 <body>
 
-<canvas id="network" style="position:relative; background-color: #333;"></canvas>
+<header>
+	<h1>NETWORK<br>VISUALISER</h1>
+</header>
 
-<div id="networkNodeMap" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
+<div id="network-container">
+	<canvas id="network"></canvas>
+</div>
 
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
 <script src="node_modules/socket.io-client/socket.io.js"></script>
