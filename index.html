@@ -17,15 +17,18 @@
 			right: 0;
 			bottom: 0;
 		}
+
+		#network {
+			position: relative;
+			background-color: #333;
+		}
 	</style>
 </head>
 <body>
 
 <div id="network-container">
-	<canvas id="network" style="position:relative; background-color: #333;"></canvas>
+	<canvas id="network" style=""></canvas>
 </div>
-
-<div id="networkNodeMap" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
 
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
 <script src="node_modules/socket.io-client/socket.io.js"></script>
