@@ -22,9 +22,32 @@
 			position: relative;
 			background-color: #333;
 		}
+
+		header {
+			position: absolute;
+			top: 0;
+			right: 0;
+			left: 0;
+			height: 100px;
+			background: #2e2e2e;
+		}
+
+		header h1 {
+			color: #FFF;
+			font-family: Ubuntu;
+			display: block;
+			float: left;
+			margin: 11px;
+			line-height: 38px;
+			font-size: 42px;
+		}
 	</style>
 </head>
 <body>
+
+<header>
+	<h1>NETWORK<br>VISUALISER</h1>
+</header>
 
 <div id="network-container">
 	<canvas id="network"></canvas>
