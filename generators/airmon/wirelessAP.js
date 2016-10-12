@@ -12,6 +12,7 @@ class wirelessAP
 		this.SSID = data[' ESSID'].trim();
 		this.seenFirst = Date.parse(data[' First time seen'].trim())/1000;
 		this.seenLast = Date.parse(data[' Last time seen'].trim())/1000;
+		this.channel = parseInt(data[' channel'].trim());
 		this.encryption = data[' Privacy'].trim();
 		this.cipher = data[' Cipher'].trim();
 		this.authentication = data[' Authentication'].trim();
@@ -42,6 +43,7 @@ class wirelessAP
 			'active': this.isActive,
 			'encryption': this.encryption,
 			'power': this.power,
+			'channel': this.channel,
 			'size': Math.max(10, Math.round((60-parseInt(this.power))/3))
 		}
 	}
