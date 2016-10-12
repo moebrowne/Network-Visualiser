@@ -1,0 +1,64 @@
+
+html,body {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	font-family: Ubuntu;
+}
+
+#network-container {
+	position: absolute;
+	top: 100px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+#network {
+	position: relative;
+	background-color: #333;
+}
+
+header {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 100px;
+	background: #2e2e2e;
+}
+
+header h1 {
+	color: #FFF;
+	display: block;
+	float: left;
+	margin: 11px;
+	line-height: 38px;
+	font-size: 42px;
+}
+
+#channel-contention {
+	float: right;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	align-items: flex-end;
+	counter-reset: channels;
+}
+
+#channel-contention .channel {
+	position: relative;
+	flex: 1;
+	width: 16px;
+	background: #125c6d;
+	font-size: 10px;
+	text-align: center;
+	color: #FFF;
+	min-height: 12px;
+	border-right: 1px solid #004444;
+}
+
+#channel-contention .channel:before {
+	counter-increment: channels;
+	content: counter(channels);
+}
