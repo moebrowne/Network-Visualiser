@@ -93,6 +93,8 @@ draw();
 function render() {
 	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
+	let channelCounter = [0,0,0,0,0,0,0,0,0,0,0,0,0];
+
 	for (var APMac in APs) {
 		var AP = APs[APMac];
 
@@ -101,9 +103,22 @@ function render() {
 			continue;
 		}
 
+		if (AP.channel > 0) {
+			channelCounter[(AP.channel-1)]++;
+		}
+
 		drawAPClients(AP);
 		drawAP(AP);
 	}
+
+	var ratio = Math.max.apply(Math, channelCounter);
+
+	for(var channelNo in channelCounter) {
+		const channelNoOneBased = parseInt(channelNo)+1;
+		const channelPercent = Math.round(((channelCounter[channelNo]/ratio)*100));
+		document.querySelector('#channel-contention .channel:nth-child('+channelNoOneBased+')').style.height = channelPercent+'%';
+	}
+
 }
 
 function drawAP(AP) {
