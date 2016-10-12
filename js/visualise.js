@@ -93,7 +93,6 @@ draw();
 function render() {
 	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
-	let channelCounter = [0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 	for (var APMac in APs) {
 		var AP = APs[APMac];
@@ -103,22 +102,40 @@ function render() {
 			continue;
 		}
 
-		if (AP.channel > 0) {
-			channelCounter[(AP.channel-1)]++;
-		}
-
 		drawAPClients(AP);
 		drawAP(AP);
 	}
 
-	var ratio = Math.max.apply(Math, channelCounter);
-
-	for(var channelNo in channelCounter) {
-		const channelNoOneBased = parseInt(channelNo)+1;
-		const channelPercent = Math.round(((channelCounter[channelNo]/ratio)*100));
-		document.querySelector('#channel-contention .channel:nth-child('+channelNoOneBased+')').style.height = channelPercent+'%';
+	var contentionPercents = this.calculateChannelContention();
+	for(var channelNo in contentionPercents) {
+		document.querySelector('#channel-contention .channel:nth-child('+channelNo+')').style.height = contentionPercents[channelNo]+'%';
 	}
 
+}
+
+function calculateChannelContention() {
+
+	let channelCounter = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,12:0,13:0};
+	var max = 0;
+
+	for(var APMac in APs) {
+		let AP = APs[APMac];
+
+		if (AP.channel > 0) {
+			channelCounter[AP.channel]++;
+
+			if (channelCounter[AP.channel] > max) {
+				max = channelCounter[AP.channel];
+			}
+		}
+	}
+
+	var channelContentionPercents = {};
+	for(var channelNo in channelCounter) {
+		channelContentionPercents[channelNo] = Math.round(((channelCounter[channelNo] / max) * 100));
+	}
+
+	return channelContentionPercents;
 }
 
 function drawAP(AP) {
