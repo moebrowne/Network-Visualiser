@@ -1,12 +1,15 @@
+var canvasContainer = document.getElementById('network-container');
 var canvas = document.getElementById('network');
 var canvasContext = canvas.getContext('2d');
 
 function expandCanvasToWindow() {
-	canvas.width = window.innerWidth;
-	canvasContext.canvas.width = window.innerWidth;
+	var canvasContainerBoundingRect = canvasContainer.getBoundingClientRect();
 
-	canvas.height = window.innerHeight;
-	canvasContext.canvas.height = window.innerHeight;
+	canvas.width = canvasContainerBoundingRect.width;
+	canvasContext.canvas.width = canvasContainerBoundingRect.width;
+
+	canvas.height = canvasContainerBoundingRect.height;
+	canvasContext.canvas.height = canvasContainerBoundingRect.height;
 }
 expandCanvasToWindow();
 
@@ -95,7 +98,7 @@ function render() {
 
 		if (Object.keys(AP.clients).length === 0) {
 			// Show only APs with connected clients
-			//continue;
+			continue;
 		}
 
 		drawAPClients(AP);
