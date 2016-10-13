@@ -123,7 +123,7 @@ function drawAP(AP) {
 	canvasContext.translate(AP.position.x, AP.position.y);
 	canvasContext.rotate(toRadians(AP.rotate));
 	//canvasContext.rect(-AP.size/2, -AP.size/2, AP.size, AP.size);
-	canvasContext.arc(0, 0, 20, 0, toRadians(360), true);
+	canvasContext.arc(0, 0, AP.size, 0, toRadians(360), true);
 	canvasContext.strokeStyle = nodeStrokeColour;
 	canvasContext.stroke();
 	canvasContext.fillStyle = '#333';
@@ -148,7 +148,7 @@ function drawAP(AP) {
 		var angleEnd = angleStart+angleOfChunk;
 
 		canvasContext.beginPath();
-		canvasContext.arc(0, 0, 18, toRadians(angleStart), toRadians(angleEnd));
+		canvasContext.arc(0, 0, AP.size-2, toRadians(angleStart), toRadians(angleEnd));
 		canvasContext.strokeStyle = '#BA770F';
 		canvasContext.stroke();
 		canvasContext.closePath();
