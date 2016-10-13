@@ -130,11 +130,20 @@ function drawAP(AP) {
 	canvasContext.fill();
 	canvasContext.closePath();
 
-	var chunksPerNode = 20;
+	// Normalise the power down to the chunks
+	let powerMax = -30;
+	let powerMin = -70;
 
-	for(var chunks = 0; chunks < 14; chunks++) {
+	// Cap the power to the max value
+	let APPower = Math.min(AP.power, powerMax);
+
+	var chunksPerNode = 25;
+	var powerPerChunk = (powerMax-powerMin)/chunksPerNode;
+	let powerChunks = ((APPower-powerMin)/powerPerChunk);
+
+	for(var chunks = 0; chunks < powerChunks; chunks++) {
 		var anglePerChunk = (360/chunksPerNode);
-		var angleOfChunk = anglePerChunk-3;
+		var angleOfChunk = anglePerChunk-4;
 		var angleStart = (chunks*anglePerChunk)-90; // Set the circle to start at the top
 		var angleEnd = angleStart+angleOfChunk;
 
