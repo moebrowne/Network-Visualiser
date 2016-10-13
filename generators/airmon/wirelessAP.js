@@ -44,7 +44,7 @@ class wirelessAP
 			'encryption': this.encryption,
 			'power': this.power,
 			'channel': this.channel,
-			'size': Math.max(10, Math.round((60-parseInt(this.power))/3))
+			'size': 17
 		}
 	}
 

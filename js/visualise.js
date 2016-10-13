@@ -104,6 +104,10 @@ function render() {
 
 		drawAPClients(AP);
 		drawAP(AP);
+
+		if (AP.active === true) {
+			drawAPPowerRing(AP);
+		}
 	}
 
 	var contentionPercents = this.calculateChannelContention();
@@ -154,7 +158,8 @@ function drawAP(AP) {
 	canvasContext.beginPath();
 	canvasContext.translate(AP.position.x, AP.position.y);
 	canvasContext.rotate(toRadians(AP.rotate));
-	canvasContext.rect(-AP.size/2, -AP.size/2, AP.size, AP.size);
+	//canvasContext.rect(-AP.size/2, -AP.size/2, AP.size, AP.size);
+	canvasContext.arc(0, 0, AP.size, 0, toRadians(360), true);
 	canvasContext.strokeStyle = nodeStrokeColour;
 	canvasContext.stroke();
 	canvasContext.fillStyle = '#333';
@@ -162,6 +167,41 @@ function drawAP(AP) {
 	canvasContext.closePath();
 	canvasContext.restore();
 
+}
+
+function drawAPPowerRing(AP) {
+
+	canvasContext.save();
+	canvasContext.beginPath();
+	canvasContext.translate(AP.position.x, AP.position.y);
+
+	// Normalise the power down to the chunks
+	const powerMax = -30;
+	const powerMin = -70;
+	const chunksPerNode = 25;
+	const ringOffset = 2; // how far from the edge of the AP should the ring appear
+	const ringAngleSpacing = 4; // The angle of the blank space between each chunk (in degrees)
+
+	// Cap the power to the max value
+	const APPower = Math.min(AP.power, powerMax);
+
+	const powerPerChunk = (powerMax-powerMin)/chunksPerNode;
+	const powerChunks = ((APPower-powerMin)/powerPerChunk);
+
+	for(var chunks = 0; chunks < powerChunks; chunks++) {
+		const anglePerChunk = (360/chunksPerNode);
+		const angleOfChunk = anglePerChunk-ringAngleSpacing;
+		const angleStart = (chunks*anglePerChunk)-90; // Set the circle to start at the top
+		const angleEnd = angleStart+angleOfChunk;
+
+		canvasContext.beginPath();
+		canvasContext.arc(0, 0, AP.size-ringOffset, toRadians(angleStart), toRadians(angleEnd));
+		canvasContext.strokeStyle = '#BA770F';
+		canvasContext.stroke();
+		canvasContext.closePath();
+	}
+
+	canvasContext.restore();
 }
 
 function drawAPClients(AP) {
