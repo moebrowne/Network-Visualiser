@@ -144,6 +144,8 @@ function drawAPPower(AP) {
 	const powerMax = -30;
 	const powerMin = -70;
 	const chunksPerNode = 25;
+	const ringOffset = 2; // how far from the edge of the AP should the ring appear
+	const ringAngleSpacing = 4; // The angle of the blank space between each chunk (in degrees)
 
 	// Cap the power to the max value
 	const APPower = Math.min(AP.power, powerMax);
@@ -153,12 +155,12 @@ function drawAPPower(AP) {
 
 	for(var chunks = 0; chunks < powerChunks; chunks++) {
 		const anglePerChunk = (360/chunksPerNode);
-		const angleOfChunk = anglePerChunk-4;
+		const angleOfChunk = anglePerChunk-ringAngleSpacing;
 		const angleStart = (chunks*anglePerChunk)-90; // Set the circle to start at the top
 		const angleEnd = angleStart+angleOfChunk;
 
 		canvasContext.beginPath();
-		canvasContext.arc(0, 0, AP.size-2, toRadians(angleStart), toRadians(angleEnd));
+		canvasContext.arc(0, 0, AP.size-ringOffset, toRadians(angleStart), toRadians(angleEnd));
 		canvasContext.strokeStyle = '#BA770F';
 		canvasContext.stroke();
 		canvasContext.closePath();
