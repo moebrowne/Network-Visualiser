@@ -103,7 +103,10 @@ function render() {
 
 		drawAPClients(AP);
 		drawAP(AP);
-		drawAPPowerRing(AP);
+
+		if (AP.active === true) {
+			drawAPPowerRing(AP);
+		}
 	}
 }
 
