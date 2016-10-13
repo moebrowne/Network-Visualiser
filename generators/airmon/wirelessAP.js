@@ -42,7 +42,7 @@ class wirelessAP
 			'active': this.isActive,
 			'encryption': this.encryption,
 			'power': this.power,
-			'size': Math.max(10, Math.round((60-parseInt(this.power))/3))
+			'size': 17
 		}
 	}
 
