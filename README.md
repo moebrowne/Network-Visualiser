@@ -3,7 +3,7 @@
 A visual representation of a network
 
 ## Screen Shot
-![screenshot](screenshot.png)
+![Airmon Data Screenshot](generators/airmon/screenshot.png)
 
 # Generators
 
@@ -11,8 +11,6 @@ A visual representation of a network
 
 The network visualiser can use data from airodump-ng as it's source of APs.
 This is the preferred generator as it will also show all associated clients
-
-![Airmon Data Screenshot](generators/airmon/Screenshot.png)
 
 To run the Airodump generator run the following commands in the `generators/airmon` directory
 
