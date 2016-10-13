@@ -103,7 +103,7 @@ function render() {
 
 		drawAPClients(AP);
 		drawAP(AP);
-		drawAPPower(AP);
+		drawAPPowerRing(AP);
 	}
 }
 
@@ -134,7 +134,7 @@ function drawAP(AP) {
 
 }
 
-function drawAPPower(AP) {
+function drawAPPowerRing(AP) {
 
 	canvasContext.save();
 	canvasContext.beginPath();
