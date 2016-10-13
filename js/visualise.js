@@ -103,6 +103,7 @@ function render() {
 
 		drawAPClients(AP);
 		drawAP(AP);
+		drawAPPower(AP);
 	}
 }
 
@@ -129,16 +130,25 @@ function drawAP(AP) {
 	canvasContext.fillStyle = '#333';
 	canvasContext.fill();
 	canvasContext.closePath();
+	canvasContext.restore();
+
+}
+
+function drawAPPower(AP) {
+
+	canvasContext.save();
+	canvasContext.beginPath();
+	canvasContext.translate(AP.position.x, AP.position.y);
 
 	// Normalise the power down to the chunks
 	let powerMax = -30;
 	let powerMin = -70;
+	var chunksPerNode = 25;
 
 	// Cap the power to the max value
 	let APPower = Math.min(AP.power, powerMax);
 
-	var chunksPerNode = 25;
-	var powerPerChunk = (powerMax-powerMin)/chunksPerNode;
+	let powerPerChunk = (powerMax-powerMin)/chunksPerNode;
 	let powerChunks = ((APPower-powerMin)/powerPerChunk);
 
 	for(var chunks = 0; chunks < powerChunks; chunks++) {
@@ -155,7 +165,6 @@ function drawAP(AP) {
 	}
 
 	canvasContext.restore();
-
 }
 
 function drawAPClients(AP) {
