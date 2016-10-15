@@ -2,25 +2,46 @@
 
 class wirelessAP
 {
+	static get regex() {
+		//			        MAC             PWR           Beacons     #Data       #/s         Channel         Speed           Enc            Cipher       Auth         ESSID
+		return new RegExp("^([A-F0-9:]+)[ ]+([\-0-9]+)[ ]+([0-9]+)[ ]+([0-9]+)[ ]+([0-9]+)[ ]+([0-9]{1,2})[ ]+([0-9]+e\.?)[ ]+([A-Z0-9]+)[ ]+([A-Z]+)?[ ]+([A-Z]+)?[ ]+(.+)$");
+	}
 
-	constructor() {}
+	static get regexGroups() {
+		return {
+			'MAC': 1,
+			'Power': 2,
+			'Beacons': 3,
+			'Data': 4,
+			'DataRate': 5,
+			'Channel': 6,
+			'Speed': 7,
+			'Encryption': 8,
+			'Cipher': 9,
+			'Auth': 10,
+			'ESSID': 11
+		}
+	};
+
+	constructor() {
+		this.seenFirst = Date.now()/1000;
+	}
 
 	update(data) {
 		let prevNodeData = this.nodeData;
 
-		this.mac = data['BSSID'].trim();
-		this.SSID = data[' ESSID'].trim();
-		this.seenFirst = Date.parse(data[' First time seen'].trim())/1000;
-		this.seenLast = Date.parse(data[' Last time seen'].trim())/1000;
-		this.encryption = data[' Privacy'].trim();
-		this.cipher = data[' Cipher'].trim();
-		this.authentication = data[' Authentication'].trim();
-		this.power = parseInt(data[' Power'].trim());
-		this.beaconCount = parseInt(data[' # beacons'].trim());
-		this.ivCount = parseInt(data[' # IV'].trim());
-		this.LANIP = data[' LAN IP'].replace(/ /g, '');
-		this.SSIDLength = parseInt(data[' ID-length'].trim());
-		this.key = data[' Key'].trim();
+		let self = wirelessAP;
+
+		this.mac = data[self.regexGroups.MAC];
+		this.SSID = data[self.regexGroups.ESSID];
+		this.seenLast = Date.now()/1000;
+		this.encryption = data[self.regexGroups.Encryption];
+		this.cipher = data[self.regexGroups.Cipher];
+		this.authentication = data[self.regexGroups.Auth];
+		this.power = parseInt(data[self.regexGroups.Power]);
+		this.beaconCount = parseInt(data[self.regexGroups.Beacons]);
+		this.ivCount = parseInt(data[self.regexGroups.Data]);
+		//this.SSIDLength = ;
 
 		let newNodeData = this.nodeData;
 
