@@ -2,19 +2,39 @@
 
 class wirelessClient
 {
+	static get regex() {
+		//       Connected AP MAC                   Client MAC      Power         AP-CL Rate    CL-AP Rate  Lost        Packets     Probed APs (CSV)
+		return /^(\(not associated\)|[A-F0-9:]+)[ ]+([A-F0-9:]+)[ ]+([\-0-9]+)[ ]+([0-9e]+) ?- ?([0-9]+)[ ]+([0-9]+)[ ]+([0-9]+)[ ]*(.+)?$/;
+	}
 
-	constructor() {}
+	static get regexGroups() {
+		return {
+			'APMAC': 1,
+			'MAC': 2,
+			'Power': 3,
+			'RateAPCL': 4,
+			'RateCLAP': 5,
+			'PacketsLost': 6,
+			'Packets': 7,
+			'ProbedAPs': 8
+		}
+	};
+
+	constructor() {
+		this.seenFirst = Date.now()/1000;
+	}
 
 	update(data) {
 		let prevNodeData = this.nodeData;
 
-		this.mac = data['Station MAC'].trim();
-		this.APMac = data[' BSSID'].trim();
-		this.seenFirst = Date.parse(data[' First time seen'].trim())/1000;
-		this.seenLast = Date.parse(data[' Last time seen'].trim())/1000;
-		this.power = parseInt(data[' Power'].trim());
-		this.packetCount = parseInt(data[' # packets'].trim());
-		this.probedAPs = []; //data[' Probed ESSIDs'].trim();
+		let self = wirelessClient;
+
+		this.mac = data[self.regexGroups.MAC];
+		this.APMac = data[self.regexGroups.APMAC];
+		this.seenLast = Date.now()/1000;
+		this.power = parseInt(data[self.regexGroups.Power]);
+		this.packetCount = parseInt(data[self.regexGroups.Packets]);
+		//this.probedAPs = data[self.regexGroups.ProbedAPs].split(',');
 
 		let newNodeData = this.nodeData;
 
