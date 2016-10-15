@@ -30,11 +30,17 @@ class wirelessClient
 		let self = wirelessClient;
 
 		this.mac = data[self.regexGroups.MAC];
-		this.APMac = data[self.regexGroups.APMAC];
 		this.seenLast = Date.now()/1000;
 		this.power = parseInt(data[self.regexGroups.Power]);
 		this.packetCount = parseInt(data[self.regexGroups.Packets]);
 		this.probedAPs = [];
+
+		if (data[self.regexGroups.APMAC] !== '(not associated)') {
+			this.APMac = data[self.regexGroups.APMAC];
+		}
+		else {
+			this.APMac = undefined;
+		}
 
 		if (typeof data[self.regexGroups.ProbedAPs] !== 'undefined') {
 			this.probedAPs = data[self.regexGroups.ProbedAPs].split(',');
