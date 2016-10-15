@@ -16,6 +16,7 @@ expandCanvasToWindow();
 window.addEventListener('resize', debounce(expandCanvasToWindow, 200));
 
 var APs = {};
+var clients = {};
 
 var socket = io('//:3000');
 
@@ -65,12 +66,19 @@ socket.on('client', function (client) {
 	addClient(client);
 });
 
-function addClient(client) {
+function addClient(clientData) {
+
+	// Add the client to the local client store
+	clients[clientData.mac] = clientData;
+
+	let client = clients[clientData.mac];
+
+	// Check if the client is associated
 	if (typeof APs[client.AP] === "undefined") {
-		//drawNode(client);
 		return;
 	}
 
+	// Is this client new to its associated AP?
 	if (typeof APs[client.AP].clients[client.mac] === 'undefined') {
 		client.lastFrames = 101;
 		client.lastFramesCount = 0;
