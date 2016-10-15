@@ -78,17 +78,19 @@ function addClient(clientData) {
 		return;
 	}
 
+	client.AP = APs[client.AP];
+
 	// Is this client new to its associated AP?
-	if (typeof APs[client.AP].clients[client.mac] === 'undefined') {
+	if (typeof client.AP.clients[client.mac] === 'undefined') {
 		client.lastFrames = 101;
 		client.lastFramesCount = 0;
 	}
-	else if (client.frames > APs[client.AP].clients[client.mac].frames) {
+	else if (client.frames > client.AP.clients[client.mac].frames) {
 		client.lastFrames = 0;
-		client.lastFramesCount = APs[client.AP].clients[client.mac].lastFramesCount;
+		client.lastFramesCount = client.AP.clients[client.mac].lastFramesCount;
 	}
 
-	APs[client.AP].clients[client.mac] = client;
+	APs[client.AP.mac].clients[client.mac] = client;
 }
 
 function draw() {
