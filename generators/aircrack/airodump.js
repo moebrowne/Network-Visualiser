@@ -12,7 +12,7 @@ var interfaceName = process.argv[2];
 var APs = {};
 var clients = {};
 
-var airodump = spawn('/usr/local/sbin/airodump-ng', [interfaceName, '--berlin', '1']);
+var airodump = spawn('airodump-ng', [interfaceName, '--berlin', '1']);
 
 es.pipeline(
 	airodump.stderr,
