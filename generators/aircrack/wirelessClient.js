@@ -62,7 +62,7 @@ class wirelessClient
 	get nodeData () {
 		return {
 			'mac': this.mac,
-			'AP': this.APMac,
+			'APMac': this.APMac,
 			'active': this.isActive,
 			'frames': this.packetCount,
 			'power': this.power,

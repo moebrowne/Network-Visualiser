@@ -74,11 +74,11 @@ function addClient(clientData) {
 	let client = clients[clientData.mac];
 
 	// Check if the client is associated
-	if (typeof APs[client.AP] === "undefined") {
+	if (typeof APs[client.APMac] === "undefined") {
 		return;
 	}
 
-	client.AP = APs[client.AP];
+	client.AP = APs[client.APMac];
 
 	// Is this client new to its associated AP?
 	if (typeof client.AP.clients[client.mac] === 'undefined') {
@@ -90,7 +90,8 @@ function addClient(clientData) {
 		client.lastFramesCount = client.AP.clients[client.mac].lastFramesCount;
 	}
 
-	APs[client.AP.mac].clients[client.mac] = client;
+	// Add a reference to this client to its associated AP
+	client.AP.clients[client.mac] = client;
 }
 
 function draw() {
