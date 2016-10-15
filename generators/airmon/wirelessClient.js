@@ -34,7 +34,11 @@ class wirelessClient
 		this.seenLast = Date.now()/1000;
 		this.power = parseInt(data[self.regexGroups.Power]);
 		this.packetCount = parseInt(data[self.regexGroups.Packets]);
-		//this.probedAPs = data[self.regexGroups.ProbedAPs].split(',');
+		this.probedAPs = [];
+
+		if (typeof data[self.regexGroups.ProbedAPs] !== 'undefined') {
+			this.probedAPs = data[self.regexGroups.ProbedAPs].split(',');
+		}
 
 		let newNodeData = this.nodeData;
 
