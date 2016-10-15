@@ -26,8 +26,6 @@ IW Scan is s simple easier to run data source but it will only show you APs
 
 To run the IW Scan generator run the following commands in the `generators/iwscan` directory
 
-##### 1.  Run the Node server
-
 ```bash
 node iwscan.js <INTERFACE_NAME>
 ```
