@@ -37,6 +37,29 @@ es.pipeline(
 
 			return;
 		}
+
+		var clientData = wirelessClient.regex.exec(line.trim());
+
+		if(clientData !== null) {
+			var clientMac = clientData[wirelessClient.regexGroups.MAC];
+
+			if (typeof clients[clientMac] === 'undefined') {
+				clients[clientMac] = new wirelessClient();
+			}
+
+			var client = clients[clientMac];
+
+			client.update(clientData);
+
+			console.log(clientData, line.trim());
+
+
+			if (client.lastUpdateChangedNodeData) {
+				io.emit('client', client.nodeData);
+			}
+
+			return;
+		}
 	})
 );
 
