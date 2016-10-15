@@ -29,10 +29,8 @@ es.pipeline(
 
 			AP.update(APData);
 
-
 			if (AP.lastUpdateChangedNodeData) {
 				io.emit('AP', AP.nodeData);
-				//console.log(AP);
 			}
 
 			return;
@@ -50,9 +48,6 @@ es.pipeline(
 			var client = clients[clientMac];
 
 			client.update(clientData);
-
-			console.log(clientData, line.trim());
-
 
 			if (client.lastUpdateChangedNodeData) {
 				io.emit('client', client.nodeData);
