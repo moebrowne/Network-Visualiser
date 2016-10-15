@@ -7,10 +7,12 @@ var spawn = require('child_process').spawn;
 var wirelessAP = require('./wirelessAP');
 var wirelessClient = require('./wirelessClient');
 
+var interfaceName = process.argv[2];
+
 var APs = {};
 var clients = {};
 
-var airodump = spawn('/usr/local/sbin/airodump-ng', ['wlan9mon', '--berlin', '1']);
+var airodump = spawn('/usr/local/sbin/airodump-ng', [interfaceName, '--berlin', '1']);
 
 es.pipeline(
 	airodump.stderr,
