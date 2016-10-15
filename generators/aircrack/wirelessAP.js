@@ -33,7 +33,6 @@ class wirelessAP
 		let self = wirelessAP;
 
 		this.mac = data[self.regexGroups.MAC];
-		this.SSID = data[self.regexGroups.ESSID];
 		this.seenLast = Date.now()/1000;
 		this.encryption = data[self.regexGroups.Encryption];
 		this.cipher = data[self.regexGroups.Cipher];
@@ -41,7 +40,18 @@ class wirelessAP
 		this.power = parseInt(data[self.regexGroups.Power]);
 		this.beaconCount = parseInt(data[self.regexGroups.Beacons]);
 		this.ivCount = parseInt(data[self.regexGroups.Data]);
-		//this.SSIDLength = ;
+
+		var hiddenAP = /<length:[ ]+([0-9]+)>/.exec(data[self.regexGroups.ESSID]);
+		if (hiddenAP !== null) {
+			const APSSIDLength = parseInt(hiddenAP[1]);
+
+			this.SSID = (APSSIDLength > 0) ? '?'.repeat(APSSIDLength):'?';
+			this.SSIDLength = (APSSIDLength > 1) ? APSSIDLength:undefined;
+		}
+		else {
+			this.SSID = data[self.regexGroups.ESSID];
+			this.SSIDLength = this.SSID.length;
+		}
 
 		let newNodeData = this.nodeData;
 
