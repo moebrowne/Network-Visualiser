@@ -3,8 +3,8 @@
 class wirelessAP
 {
 	static get regex() {
-		//			        MAC             PWR           Beacons     #Data       #/s         Channel         Speed           Enc            Cipher       Auth         ESSID
-		return new RegExp("^([A-F0-9:]+)[ ]+([\-0-9]+)[ ]+([0-9]+)[ ]+([0-9]+)[ ]+([0-9]+)[ ]+([0-9]{1,2})[ ]+([0-9]+e\.?)[ ]+([A-Z0-9]+)[ ]+([A-Z]+)?[ ]+([A-Z]+)?[ ]+(.+)$");
+		//       MAC             PWR           Beacons     #Data       #/s         Channel         Speed           Enc            Cipher       Auth         ESSID
+		return /^([A-F0-9:]+)[ ]+([\-0-9]+)[ ]+([0-9]+)[ ]+([0-9]+)[ ]+([0-9]+)[ ]+([0-9]{1,2})[ ]+([0-9]+e\.?)[ ]+([A-Z0-9]+)[ ]+([A-Z]+)?[ ]+([A-Z]+)?[ ]+(.+)$/;
 	}
 
 	static get regexGroups() {
