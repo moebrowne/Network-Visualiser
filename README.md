@@ -3,38 +3,22 @@
 A visual representation of a network
 
 ## Screen Shot
-![Airmon Data Screenshot](generators/airmon/screenshot.png)
+![Airmon Data Screenshot](generators/aircrack/screenshot.png)
 
 # Generators
 
-## Airodump NG
+## AirCrack NG
 
-The network visualiser can use data from airodump-ng as it's source of APs.
-This is the preferred generator as it will also show all associated clients
+The network visualiser can use airodump-ng as it's source of data. This is the preferred generator as it will also show all associated clients
 
-To run the Airodump generator run the following commands in the `generators/airmon` directory
-
-##### 1. Start Running Airodump NG
+To run the Airodump generator run the following commands in the `generators/aircrack` directory
 
 ```bash
-airodump-ng -a -b g -w data --output-format csv --write-interval 1 mon0
+node airodump.js <INTERFACE_NAME>
 ```
 
-Note: The `--write-interval 1` flag is only available with the latest version of Airodump NG, it can be omitted
-with older versions you will just be limited to 30 second refresh times.
-
-
-##### 2. Run the file watcher
-
-```bash
-./parseCSV
-```
-
-##### 3. Run the Node server
-
-```bash
-node airmon-parse.js
-```
+- Replace `<INTERFACE_NAME>` with the name of an interface in monitor mode. Most of the time this will be `wlan0mon`
+- This must be run as root as it's accessing the device directly
 
 ## IW Scan
 
@@ -45,10 +29,8 @@ To run the IW Scan generator run the following commands in the `generators/iwsca
 ##### 1.  Run the Node server
 
 ```bash
-node iwscan.js wlan0
+node iwscan.js <INTERFACE_NAME>
 ```
 
-Notes:
-
-- Replace wlan0 with the interface you want to scan.
-- It's recommended to run is as root (`sudo`) else you wont be able to do an active scan.
+- Replace `<INTERFACE_NAME>` with the interface you want to scan.
+- It's recommended to run this as root (`sudo node iwscan.js <INTERFACE_NAME>`), while it will still work you wont be able to do an active scan.
