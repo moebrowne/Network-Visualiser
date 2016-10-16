@@ -65,7 +65,7 @@ class wirelessClient
 	}
 
 	determineIfActive () {
-		return (this.calculateSeenSecondsAgo() < 2)
+		return (this.calculateSeenSecondsAgo() < 120)
 	}
 
 	calculateSeenSecondsAgo () {
