@@ -56,6 +56,14 @@ class wirelessClient
 		return JSON.stringify(nodeDataCompare) !== JSON.stringify(this.nodeData);
 	}
 
+	touch() {
+		let prevNodeData = this.nodeData;
+		this.packetsFlowing = false;
+		this.seenSecondsAgo = this.calculateSeenSecondsAgo();
+		this.active = this.determineIfActive();
+		return this.isDifferentTo(prevNodeData);
+	}
+
 	determineIfActive () {
 		return (this.calculateSeenSecondsAgo() < 2)
 	}
