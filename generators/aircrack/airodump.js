@@ -66,10 +66,8 @@ setInterval(function() {
 
 		var client = clients[clientMacAddr];
 
-		if (client.touch(client.lastUpdateData)) {
+		if (client.touch()) {
 			io.emit('client', client.nodeData);
-			client.lastUpdateData = client.nodeData;
-			console.log('updating: '+clientMacAddr);
 		}
 	}
 }, 1000);
