@@ -31,6 +31,8 @@ class wirelessClient
 
 		this.mac = data[self.regexGroups.MAC];
 		this.seenLast = Date.now()/1000;
+		this.seenSecondsAgo = 0;
+		this.active = true;
 		this.power = parseInt(data[self.regexGroups.Power]);
 		this.packets = parseInt(data[self.regexGroups.Packets]);
 		this.packetsFlowing = this.packets > prevNodeData.packets;
@@ -54,11 +56,11 @@ class wirelessClient
 		return JSON.stringify(nodeDataCompare) !== JSON.stringify(this.nodeData);
 	}
 
-	get isActive () {
-		return (this.seenSecondsAgo < 120)
+	determineIfActive () {
+		return (this.calculateSeenSecondsAgo() < 2)
 	}
 
-	get seenSecondsAgo () {
+	calculateSeenSecondsAgo () {
 		return (Date.now()/1000)-this.seenLast;
 	}
 
@@ -66,7 +68,7 @@ class wirelessClient
 		return {
 			'mac': this.mac,
 			'APMac': this.APMac,
-			'active': this.isActive,
+			'active': this.active,
 			'packets': this.packets,
 			'packetsFlowing': this.packetsFlowing,
 			'power': this.power,
