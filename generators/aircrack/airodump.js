@@ -61,6 +61,18 @@ es.pipeline(
 );
 
 setInterval(function() {
+	// Update All APs
+	for (var APMacAddr in APs) {
+		if (!APs.hasOwnProperty(APMacAddr)) continue;
+
+		var AP = APs[APMacAddr];
+
+		if (AP.touch()) {
+			io.emit('AP', AP.nodeData);
+		}
+	}
+
+	// Update All Clients
 	for (var clientMacAddr in clients) {
 		if (!clients.hasOwnProperty(clientMacAddr)) continue;
 
