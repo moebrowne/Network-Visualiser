@@ -81,7 +81,7 @@ class wirelessAP
 		return {
 			'mac': this.mac,
 			'SSID': this.SSID,
-			'active': this.determineIfActive(),
+			'active': this.active,
 			'encryption': this.encryption,
 			'power': this.power,
 			'size': 17
