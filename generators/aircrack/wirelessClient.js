@@ -36,10 +36,6 @@ class wirelessClient
 		this.packetsFlowing = this.packets > prevNodeData.packets;
 		this.probedAPs = [];
 
-		if(this.packetsFlowing) {
-			console.log(this.mac, this.APMac);
-		}
-
 		if (data[self.regexGroups.APMAC] !== '(not associated)') {
 			this.APMac = data[self.regexGroups.APMAC];
 		}
@@ -51,9 +47,11 @@ class wirelessClient
 			this.probedAPs = data[self.regexGroups.ProbedAPs].split(',');
 		}
 
-		let newNodeData = this.nodeData;
+		this.lastUpdateChangedNodeData = this.isDifferentTo(prevNodeData);
+	}
 
-		this.lastUpdateChangedNodeData = JSON.stringify(prevNodeData) !== JSON.stringify(newNodeData);
+	isDifferentTo(nodeDataCompare) {
+		return JSON.stringify(nodeDataCompare) !== JSON.stringify(this.nodeData);
 	}
 
 	get isActive () {
