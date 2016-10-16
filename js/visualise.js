@@ -16,6 +16,7 @@ expandCanvasToWindow();
 window.addEventListener('resize', debounce(expandCanvasToWindow, 200));
 
 var APs = {};
+var clients = {};
 
 var socket = io('//:3000');
 
@@ -65,22 +66,38 @@ socket.on('client', function (client) {
 	addClient(client);
 });
 
-function addClient(client) {
-	if (typeof APs[client.AP] === "undefined") {
-		//drawNode(client);
-		return;
+function addClient(clientData) {
+
+	// Is the client new to us?
+	if (typeof clients[clientData.mac] === 'undefined') {
+		clientData.packetAnimOffset = 0;
+		// Add the client to the local client store
+		clients[clientData.mac] = clientData;
 	}
 
-	if (typeof APs[client.AP].clients[client.mac] === 'undefined') {
-		client.lastFrames = 101;
-		client.lastFramesCount = 0;
+	let client = clients[clientData.mac];
+
+	// Check if the client is associated
+	if (typeof client.APMac !== "undefined") {
+		if (typeof APs[client.APMac] !== "undefined") {
+			// Add cross references to the AP and client
+			client.AP = APs[client.APMac];
+			APs[client.APMac].clients[clientData.mac] = client;
+		}
 	}
-	else if (client.frames > APs[client.AP].clients[client.mac].frames) {
-		client.lastFrames = 0;
-		client.lastFramesCount = APs[client.AP].clients[client.mac].lastFramesCount;
+	else {
+		// Remove any references (if a client disassociates)
+		client.AP = undefined;
+		if (typeof APs[client.APMac] !== "undefined") {
+			delete APs[client.APMac].clients[clientData.mac];
+		}
 	}
 
-	APs[client.AP].clients[client.mac] = client;
+	// Update the client
+	var packetAnimOffset = client.packetsFlowing ? clients[client.mac].packetAnimOffset:0;
+
+	clients[client.mac] = clientData;
+	clients[client.mac].packetAnimOffset = packetAnimOffset;
 }
 
 function draw() {
@@ -98,7 +115,7 @@ function render() {
 
 		if (Object.keys(AP.clients).length === 0) {
 			// Show only APs with connected clients
-			continue;
+			//continue;
 		}
 
 		drawAPClients(AP);
@@ -235,15 +252,15 @@ function linkNodes(node, linkToNode) {
 	canvasContext.restore();
 
 
-	if (linkToNode.lastFrames++ < 60) {
-		linkToNode.lastFramesCount +=2;
+	if (linkToNode.packetsFlowing === true) {
+		linkToNode.packetAnimOffset += 2;
 
 		canvasContext.save();
 		canvasContext.beginPath();
 		canvasContext.moveTo(linkToNode.position.x, linkToNode.position.y);
 		canvasContext.lineTo(node.position.x, node.position.y);
 		canvasContext.setLineDash([4, 50]);
-		canvasContext.lineDashOffset = linkToNode.lastFramesCount;
+		canvasContext.lineDashOffset = linkToNode.packetAnimOffset;
 		canvasContext.strokeStyle = '#FFF';
 		canvasContext.stroke();
 		canvasContext.closePath();

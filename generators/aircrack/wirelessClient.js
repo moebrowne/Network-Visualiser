@@ -32,8 +32,13 @@ class wirelessClient
 		this.mac = data[self.regexGroups.MAC];
 		this.seenLast = Date.now()/1000;
 		this.power = parseInt(data[self.regexGroups.Power]);
-		this.packetCount = parseInt(data[self.regexGroups.Packets]);
+		this.packets = parseInt(data[self.regexGroups.Packets]);
+		this.packetsFlowing = this.packets > prevNodeData.packets;
 		this.probedAPs = [];
+
+		if(this.packetsFlowing) {
+			console.log(this.mac, this.APMac);
+		}
 
 		if (data[self.regexGroups.APMAC] !== '(not associated)') {
 			this.APMac = data[self.regexGroups.APMAC];
@@ -62,9 +67,10 @@ class wirelessClient
 	get nodeData () {
 		return {
 			'mac': this.mac,
-			'AP': this.APMac,
+			'APMac': this.APMac,
 			'active': this.isActive,
-			'frames': this.packetCount,
+			'packets': this.packets,
+			'packetsFlowing': this.packetsFlowing,
 			'power': this.power,
 			'size': 12
 		}
