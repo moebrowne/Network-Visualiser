@@ -75,29 +75,29 @@ function addClient(clientData) {
 		clients[clientData.mac] = clientData;
 	}
 
-	let client = clients[clientData.mac];
+	// Update the client
+	var packetAnimOffset = clients[clientData.mac].packetAnimOffset;
+	if (typeof APs[clientData.APMac] !== "undefined" && clientData.packetsFlowing === true && clients[clientData.mac].packetAnimOffset === 0) {
+		packetAnimOffset = 120;
+		console.log(clientData.mac, clientData.APMac);
+	}
+
+	clients[clientData.mac] = clientData;
+	clients[clientData.mac].packetAnimOffset = packetAnimOffset;
 
 	// Check if the client is associated
-	if (typeof client.APMac !== "undefined") {
-		if (typeof APs[client.APMac] !== "undefined") {
+	if (typeof clientData.APMac !== "undefined") {
+		if (typeof APs[clientData.APMac] !== "undefined") {
 			// Add cross references to the AP and client
-			client.AP = APs[client.APMac];
-			APs[client.APMac].clients[clientData.mac] = client;
+			APs[clientData.APMac].clients[clientData.mac] = clients[clientData.mac];
 		}
 	}
 	else {
 		// Remove any references (if a client disassociates)
-		client.AP = undefined;
-		if (typeof APs[client.APMac] !== "undefined") {
-			delete APs[client.APMac].clients[clientData.mac];
+		if (typeof APs[clientData.APMac] !== "undefined") {
+			delete APs[clientData.APMac].clients[clientData.mac];
 		}
 	}
-
-	// Update the client
-	var packetAnimOffset = client.packetsFlowing ? clients[client.mac].packetAnimOffset:0;
-
-	clients[client.mac] = clientData;
-	clients[client.mac].packetAnimOffset = packetAnimOffset;
 }
 
 function draw() {
@@ -115,7 +115,7 @@ function render() {
 
 		if (Object.keys(AP.clients).length === 0) {
 			// Show only APs with connected clients
-			//continue;
+			continue;
 		}
 
 		drawAPClients(AP);
@@ -252,8 +252,8 @@ function linkNodes(node, linkToNode) {
 	canvasContext.restore();
 
 
-	if (linkToNode.packetsFlowing === true) {
-		linkToNode.packetAnimOffset += 2;
+	if (linkToNode.packetAnimOffset > 0) {
+		linkToNode.packetAnimOffset -= 2;
 
 		canvasContext.save();
 		canvasContext.beginPath();
