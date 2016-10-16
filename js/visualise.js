@@ -115,7 +115,7 @@ function render() {
 
 		if (Object.keys(AP.clients).length === 0) {
 			// Show only APs with connected clients
-			continue;
+			//continue;
 		}
 
 		drawAPClients(AP);
@@ -125,12 +125,38 @@ function render() {
 			drawAPPowerRing(AP);
 		}
 	}
+	renderChannelContention();
+
+}
+
+function renderChannelContention() {
+
+	var channelCanvas = document.getElementById('channel-contention');
+	var channelCanvasContext = channelCanvas.getContext('2d');
+
+	var barWidth = 14;
+	var barGap = 2;
 
 	var contentionPercents = this.calculateChannelContention();
 	for(var channelNo in contentionPercents) {
-		document.querySelector('#channel-contention .channel:nth-child('+channelNo+')').style.height = contentionPercents[channelNo]+'%';
-	}
 
+		channelCanvasContext.save();
+		channelCanvasContext.beginPath();
+
+		channelCanvasContext.translate(((channelNo-1)*(barWidth+barGap)), 100);
+		channelCanvasContext.rect(0,0, barWidth,-(contentionPercents[channelNo]*0.9)-10);
+		channelCanvasContext.fillStyle = '#125C6D';
+		channelCanvasContext.fill();
+
+		channelCanvasContext.textAlign = 'center';
+		channelCanvasContext.font = '8px Ubuntu';
+		channelCanvasContext.fillStyle = '#FFF';
+		channelCanvasContext.fillText(channelNo,(barWidth/2),-2);
+
+		channelCanvasContext.closePath();
+		channelCanvasContext.restore();
+		//document.querySelector('#channel-contention .channel:nth-child('+channelNo+')').style.height = contentionPercents[channelNo]+'%';
+	}
 }
 
 function calculateChannelContention() {
