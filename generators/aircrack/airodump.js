@@ -60,6 +60,20 @@ es.pipeline(
 	})
 );
 
+setInterval(function() {
+	for (var clientMacAddr in clients) {
+		if (!clients.hasOwnProperty(clientMacAddr)) continue;
+
+		var client = clients[clientMacAddr];
+
+		if (client.touch(client.lastUpdateData)) {
+			io.emit('client', client.nodeData);
+			client.lastUpdateData = client.nodeData;
+			console.log('updating: '+clientMacAddr);
+		}
+	}
+}, 1000);
+
 
 io.on('connection', function(socket) {
 	console.log('User connected');
