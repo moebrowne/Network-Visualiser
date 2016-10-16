@@ -60,6 +60,32 @@ es.pipeline(
 	})
 );
 
+function updateExistingNodes() {
+	// Update All APs
+	for (var APMacAddr in APs) {
+		if (!APs.hasOwnProperty(APMacAddr)) continue;
+
+		var AP = APs[APMacAddr];
+
+		if (AP.touch()) {
+			io.emit('AP', AP.nodeData);
+		}
+	}
+
+	// Update All Clients
+	for (var clientMacAddr in clients) {
+		if (!clients.hasOwnProperty(clientMacAddr)) continue;
+
+		var client = clients[clientMacAddr];
+
+		if (client.touch()) {
+			io.emit('client', client.nodeData);
+		}
+	}
+	setTimeout(updateExistingNodes, 1000);
+}
+updateExistingNodes();
+
 
 io.on('connection', function(socket) {
 	console.log('User connected');

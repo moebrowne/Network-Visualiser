@@ -31,14 +31,11 @@ class wirelessClient
 
 		this.mac = data[self.regexGroups.MAC];
 		this.seenLast = Date.now()/1000;
+		this.active = true;
 		this.power = parseInt(data[self.regexGroups.Power]);
 		this.packets = parseInt(data[self.regexGroups.Packets]);
 		this.packetsFlowing = this.packets > prevNodeData.packets;
 		this.probedAPs = [];
-
-		if(this.packetsFlowing) {
-			console.log(this.mac, this.APMac);
-		}
 
 		if (data[self.regexGroups.APMAC] !== '(not associated)') {
 			this.APMac = data[self.regexGroups.APMAC];
@@ -51,16 +48,25 @@ class wirelessClient
 			this.probedAPs = data[self.regexGroups.ProbedAPs].split(',');
 		}
 
-		let newNodeData = this.nodeData;
-
-		this.lastUpdateChangedNodeData = JSON.stringify(prevNodeData) !== JSON.stringify(newNodeData);
+		this.lastUpdateChangedNodeData = this.isDifferentTo(prevNodeData);
 	}
 
-	get isActive () {
-		return (this.seenSecondsAgo < 120)
+	isDifferentTo(nodeDataCompare) {
+		return JSON.stringify(nodeDataCompare) !== JSON.stringify(this.nodeData);
 	}
 
-	get seenSecondsAgo () {
+	touch() {
+		let prevNodeData = this.nodeData;
+		this.packetsFlowing = false;
+		this.active = this.determineIfActive();
+		return this.isDifferentTo(prevNodeData);
+	}
+
+	determineIfActive () {
+		return (this.calculateSeenSecondsAgo() < 120)
+	}
+
+	calculateSeenSecondsAgo () {
 		return (Date.now()/1000)-this.seenLast;
 	}
 
@@ -68,7 +74,7 @@ class wirelessClient
 		return {
 			'mac': this.mac,
 			'APMac': this.APMac,
-			'active': this.isActive,
+			'active': this.active,
 			'packets': this.packets,
 			'packetsFlowing': this.packetsFlowing,
 			'power': this.power,
