@@ -18,7 +18,9 @@ es.pipeline(
 	airodump.stderr,
 	es.split(),
 	es.map(function (line) {
-		var APData = wirelessAP.regex.exec(line.trim());
+		var lineTrimmed = line.trim();
+
+		var APData = wirelessAP.regex.exec(lineTrimmed);
 
 		if(APData !== null) {
 			var APMac = APData[wirelessAP.regexGroups.MAC];
@@ -38,7 +40,7 @@ es.pipeline(
 			return;
 		}
 
-		var clientData = wirelessClient.regex.exec(line.trim());
+		var clientData = wirelessClient.regex.exec(lineTrimmed);
 
 		if(clientData !== null) {
 			var clientMac = clientData[wirelessClient.regexGroups.MAC];
