@@ -79,7 +79,6 @@ function addClient(clientData) {
 	var packetAnimOffset = clients[clientData.mac].packetAnimOffset;
 	if (typeof APs[clientData.APMac] !== "undefined" && clientData.packetsFlowing === true && clients[clientData.mac].packetAnimOffset === 0) {
 		packetAnimOffset = 120;
-		console.log(clientData.mac, clientData.APMac);
 	}
 
 	clients[clientData.mac] = clientData;
