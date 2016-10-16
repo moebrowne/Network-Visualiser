@@ -60,7 +60,7 @@ es.pipeline(
 	})
 );
 
-setInterval(function() {
+function updateExistingNodes() {
 	// Update All APs
 	for (var APMacAddr in APs) {
 		if (!APs.hasOwnProperty(APMacAddr)) continue;
@@ -82,7 +82,9 @@ setInterval(function() {
 			io.emit('client', client.nodeData);
 		}
 	}
-}, 1000);
+	setTimeout(updateExistingNodes, 1000);
+}
+updateExistingNodes();
 
 
 io.on('connection', function(socket) {
