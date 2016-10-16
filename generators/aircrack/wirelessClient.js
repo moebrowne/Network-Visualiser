@@ -31,7 +31,6 @@ class wirelessClient
 
 		this.mac = data[self.regexGroups.MAC];
 		this.seenLast = Date.now()/1000;
-		this.seenSecondsAgo = 0;
 		this.active = true;
 		this.power = parseInt(data[self.regexGroups.Power]);
 		this.packets = parseInt(data[self.regexGroups.Packets]);
@@ -59,7 +58,6 @@ class wirelessClient
 	touch() {
 		let prevNodeData = this.nodeData;
 		this.packetsFlowing = false;
-		this.seenSecondsAgo = this.calculateSeenSecondsAgo();
 		this.active = this.determineIfActive();
 		return this.isDifferentTo(prevNodeData);
 	}

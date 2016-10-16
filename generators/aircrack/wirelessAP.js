@@ -34,7 +34,6 @@ class wirelessAP
 
 		this.mac = data[self.regexGroups.MAC];
 		this.seenLast = Date.now()/1000;
-		this.seenSecondsAgo = 0;
 		this.active = true;
 		this.encryption = data[self.regexGroups.Encryption];
 		this.cipher = data[self.regexGroups.Cipher];
@@ -64,7 +63,6 @@ class wirelessAP
 
 	touch() {
 		let prevNodeData = this.nodeData;
-		this.seenSecondsAgo = this.calculateSeenSecondsAgo();
 		this.active = this.determineIfActive();
 		return this.isDifferentTo(prevNodeData);
 	}
