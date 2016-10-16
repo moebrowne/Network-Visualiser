@@ -31,4 +31,4 @@ node generators/iwscan/iwscan.js <INTERFACE_NAME>
 ```
 
 - Replace `<INTERFACE_NAME>` with the interface you want to scan.
-- It's recommended to run this as root (`sudo node iwscan.js <INTERFACE_NAME>`), while it will still work you wont be able to do an active scan.
+- It's recommended to run this as root (`sudo node generators/iwscan/iwscan.js <INTERFACE_NAME>`), while it will still work you wont be able to do an active scan.
