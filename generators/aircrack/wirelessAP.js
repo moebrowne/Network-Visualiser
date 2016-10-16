@@ -34,6 +34,8 @@ class wirelessAP
 
 		this.mac = data[self.regexGroups.MAC];
 		this.seenLast = Date.now()/1000;
+		this.seenSecondsAgo = 0;
+		this.active = true;
 		this.encryption = data[self.regexGroups.Encryption];
 		this.cipher = data[self.regexGroups.Cipher];
 		this.authentication = data[self.regexGroups.Auth];
@@ -53,16 +55,25 @@ class wirelessAP
 			this.SSIDLength = this.SSID.length;
 		}
 
-		let newNodeData = this.nodeData;
-
-		this.lastUpdateChangedNodeData = JSON.stringify(prevNodeData) !== JSON.stringify(newNodeData);
+		this.lastUpdateChangedNodeData = this.isDifferentTo(prevNodeData);
 	}
 
-	get isActive () {
-		return (this.seenSecondsAgo < 120)
+	isDifferentTo(nodeDataCompare) {
+		return JSON.stringify(nodeDataCompare) !== JSON.stringify(this.nodeData);
 	}
 
-	get seenSecondsAgo () {
+	touch() {
+		let prevNodeData = this.nodeData;
+		this.seenSecondsAgo = this.calculateSeenSecondsAgo();
+		this.active = this.determineIfActive();
+		return this.isDifferentTo(prevNodeData);
+	}
+
+	determineIfActive () {
+		return (this.calculateSeenSecondsAgo() < 120)
+	}
+
+	calculateSeenSecondsAgo () {
 		return (Date.now()/1000)-this.seenLast;
 	}
 
@@ -70,7 +81,7 @@ class wirelessAP
 		return {
 			'mac': this.mac,
 			'SSID': this.SSID,
-			'active': this.isActive,
+			'active': this.determineIfActive(),
 			'encryption': this.encryption,
 			'power': this.power,
 			'size': 17
