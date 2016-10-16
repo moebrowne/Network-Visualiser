@@ -32,8 +32,8 @@ class wirelessClient
 		this.mac = data[self.regexGroups.MAC];
 		this.seenLast = Date.now()/1000;
 		this.power = parseInt(data[self.regexGroups.Power]);
-		this.packetCount = parseInt(data[self.regexGroups.Packets]);
-		this.packetsFlowing = this.packetCount > prevNodeData.frames;
+		this.packets = parseInt(data[self.regexGroups.Packets]);
+		this.packetsFlowing = this.packets > prevNodeData.packets;
 		this.probedAPs = [];
 
 		if(this.packetsFlowing) {
@@ -69,7 +69,7 @@ class wirelessClient
 			'mac': this.mac,
 			'APMac': this.APMac,
 			'active': this.isActive,
-			'frames': this.packetCount,
+			'packets': this.packets,
 			'packetsFlowing': this.packetsFlowing,
 			'power': this.power,
 			'size': 12
