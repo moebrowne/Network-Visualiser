@@ -144,18 +144,18 @@ function renderChannelContention() {
 		if (AP.channel <= 0) continue;
 
 		if (typeof APsByChannel[AP.channel] === 'undefined') {
-			APsByChannel[AP.channel] = {'active':[], 'inactive': []}
+			APsByChannel[AP.channel] = {'active': 0, 'inactive': 0}
 		}
 
 		if (AP.active === true) {
-			APsByChannel[AP.channel].active.push(AP);
+			APsByChannel[AP.channel].active++;
 		}
 		else {
-			APsByChannel[AP.channel].inactive.push(AP);
+			APsByChannel[AP.channel].inactive++;
 		}
 
-		let inactiveAPsCount = APsByChannel[AP.channel].inactive.length;
-		let activeAPsCount = APsByChannel[AP.channel].active.length;
+		let inactiveAPsCount = APsByChannel[AP.channel].inactive;
+		let activeAPsCount = APsByChannel[AP.channel].active;
 
 		if ((inactiveAPsCount + activeAPsCount) > max) {
 			max = (inactiveAPsCount + activeAPsCount);
@@ -167,11 +167,11 @@ function renderChannelContention() {
 
 	for(var channelNo in APsByChannel) {
 
-		const activeAPs = APsByChannel[channelNo].active.length;
-		const inactiveAPs = APsByChannel[channelNo].inactive.length;
+		const activeAPs = APsByChannel[channelNo].active;
+		const inactiveAPs = APsByChannel[channelNo].inactive;
 		const APsTotal = (activeAPs+inactiveAPs);
 
-		let channelPercent = ((inactiveAPs+activeAPs) / max) * 100;
+		let channelPercent = (APsTotal / max) * 100;
 
 		let activePercent = (channelPercent / APsTotal) * activeAPs;
 		let inactivePercent = (channelPercent / APsTotal) * inactiveAPs;
