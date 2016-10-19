@@ -139,7 +139,7 @@ function renderChannelContention() {
 	var max = 0;
 
 	for(var APMac in APs) {
-		let AP = APs[APMac];
+		const AP = APs[APMac];
 
 		if (AP.channel <= 0) continue;
 
@@ -154,16 +154,17 @@ function renderChannelContention() {
 			APsByChannel[AP.channel].inactive++;
 		}
 
-		let inactiveAPsCount = APsByChannel[AP.channel].inactive;
-		let activeAPsCount = APsByChannel[AP.channel].active;
+		const inactiveAPsCount = APsByChannel[AP.channel].inactive;
+		const activeAPsCount = APsByChannel[AP.channel].active;
+		const APsTotal = inactiveAPsCount + activeAPsCount;
 
-		if ((inactiveAPsCount + activeAPsCount) > max) {
-			max = (inactiveAPsCount + activeAPsCount);
+		if (APsTotal > max) {
+			max = APsTotal;
 		}
 	}
 
-	var barWidth = 14;
-	var barGap = 2;
+	const barWidth = 14;
+	const barGap = 2;
 
 	for(var channelNo in APsByChannel) {
 
@@ -171,10 +172,10 @@ function renderChannelContention() {
 		const inactiveAPs = APsByChannel[channelNo].inactive;
 		const APsTotal = (activeAPs+inactiveAPs);
 
-		let channelPercent = (APsTotal / max) * 100;
+		const channelPercent = (APsTotal / max) * 100;
 
-		let activePercent = (channelPercent / APsTotal) * activeAPs;
-		let inactivePercent = (channelPercent / APsTotal) * inactiveAPs;
+		const activePercent = (channelPercent / APsTotal) * activeAPs;
+		const inactivePercent = (channelPercent / APsTotal) * inactiveAPs;
 
 		channelCanvasContext.save();
 		channelCanvasContext.translate(((channelNo-1)*(barWidth+barGap)), 100);
