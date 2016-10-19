@@ -142,8 +142,8 @@ function renderChannelContention() {
 
 		channelCanvasContext.save();
 		channelCanvasContext.beginPath();
-
 		channelCanvasContext.translate(((channelNo-1)*(barWidth+barGap)), 100);
+
 		channelCanvasContext.rect(0, 0, barWidth, -(contentionPercents[channelNo]*0.9)-10);
 		channelCanvasContext.fillStyle = '#125C6D';
 		channelCanvasContext.fill();
