@@ -2,6 +2,9 @@ var canvasContainer = document.getElementById('network-container');
 var canvas = document.getElementById('network');
 var canvasContext = canvas.getContext('2d');
 
+var channelCanvas = document.getElementById('channel-contention');
+var channelCanvasContext = channelCanvas.getContext('2d');
+
 function expandCanvasToWindow() {
 	var canvasContainerBoundingRect = canvasContainer.getBoundingClientRect();
 
@@ -109,12 +112,13 @@ draw();
 function render() {
 	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
+
 	for (var APMac in APs) {
 		var AP = APs[APMac];
 
 		if (Object.keys(AP.clients).length === 0) {
 			// Show only APs with connected clients
-			continue;
+			//continue;
 		}
 
 		drawAPClients(AP);
@@ -123,6 +127,87 @@ function render() {
 		if (AP.active === true) {
 			drawAPPowerRing(AP);
 		}
+	}
+	renderChannelContention();
+
+}
+
+function renderChannelContention() {
+	channelCanvasContext.clearRect(0, 0, channelCanvas.width, channelCanvas.height);
+
+	let APsByChannel = {};
+	var max = 0;
+
+	// Count the number of active and inactive APs in each channel
+	for(var APMac in APs) {
+		const AP = APs[APMac];
+
+		if (AP.channel <= 0) continue;
+
+		if (typeof APsByChannel[AP.channel] === 'undefined') {
+			APsByChannel[AP.channel] = {'active': 0, 'inactive': 0}
+		}
+
+		if (AP.active === true) {
+			APsByChannel[AP.channel].active++;
+		}
+		else {
+			APsByChannel[AP.channel].inactive++;
+		}
+
+		const inactiveAPsCount = APsByChannel[AP.channel].inactive;
+		const activeAPsCount = APsByChannel[AP.channel].active;
+		const APsTotal = inactiveAPsCount + activeAPsCount;
+
+		if (APsTotal > max) {
+			max = APsTotal;
+		}
+	}
+
+	const barWidth = 14;
+	const barGap = 2;
+
+	for (var channelNo=1; channelNo <= 13; channelNo++) {
+
+		if (typeof APsByChannel[channelNo] === 'undefined') {
+			APsByChannel[channelNo] = {'active': 0, 'inactive': 0}
+		}
+
+		const activeAPs = APsByChannel[channelNo].active;
+		const inactiveAPs = APsByChannel[channelNo].inactive;
+		const APsTotal = (activeAPs+inactiveAPs);
+
+		const channelPercent = (APsTotal / max) * 100;
+
+		const activePercent = (channelPercent === 0) ? 0: (channelPercent / APsTotal) * activeAPs * 0.9;
+		const inactivePercent = (channelPercent === 0) ? 0: (channelPercent / APsTotal) * inactiveAPs * 0.9;
+
+		channelCanvasContext.save();
+		channelCanvasContext.translate(((channelNo-1)*(barWidth+barGap)), 90);
+
+		// Draw the active APs bar
+		channelCanvasContext.beginPath();
+			channelCanvasContext.rect(0, 0, barWidth, -(activePercent+1));
+			channelCanvasContext.fillStyle = '#125C6D';
+			channelCanvasContext.fill();
+		channelCanvasContext.closePath();
+
+		// Draw the inactive APs bar
+		channelCanvasContext.beginPath();
+			channelCanvasContext.rect(0, -(activePercent+1), barWidth, -inactivePercent);
+			channelCanvasContext.fillStyle = '#054858';
+			channelCanvasContext.fill();
+		channelCanvasContext.closePath();
+
+		// Draw the bar label
+		channelCanvasContext.beginPath();
+			channelCanvasContext.textAlign = 'center';
+			channelCanvasContext.font = '8px Ubuntu';
+			channelCanvasContext.fillStyle = '#FFF';
+			channelCanvasContext.fillText(channelNo, (barWidth/2), 8);
+		channelCanvasContext.closePath();
+
+		channelCanvasContext.restore();
 	}
 }
 

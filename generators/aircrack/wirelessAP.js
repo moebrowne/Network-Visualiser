@@ -39,6 +39,7 @@ class wirelessAP
 		this.cipher = data[self.regexGroups.Cipher];
 		this.authentication = data[self.regexGroups.Auth];
 		this.power = parseInt(data[self.regexGroups.Power]);
+		this.channel = parseInt(data[self.regexGroups.Channel]);
 		this.beaconCount = parseInt(data[self.regexGroups.Beacons]);
 		this.ivCount = parseInt(data[self.regexGroups.Data]);
 
@@ -82,6 +83,7 @@ class wirelessAP
 			'active': this.active,
 			'encryption': this.encryption,
 			'power': this.power,
+			'channel': this.channel,
 			'size': 17
 		}
 	}
