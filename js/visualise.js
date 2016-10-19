@@ -131,35 +131,6 @@ function render() {
 
 function renderChannelContention() {
 
-	var channelCanvas = document.getElementById('channel-contention');
-	var channelCanvasContext = channelCanvas.getContext('2d');
-
-	var barWidth = 14;
-	var barGap = 2;
-
-	var contentionPercents = this.calculateChannelContention();
-	for(var channelNo in contentionPercents) {
-
-		channelCanvasContext.save();
-		channelCanvasContext.beginPath();
-		channelCanvasContext.translate(((channelNo-1)*(barWidth+barGap)), 100);
-
-		channelCanvasContext.rect(0, 0, barWidth, -(contentionPercents[channelNo]*0.9)-10);
-		channelCanvasContext.fillStyle = '#125C6D';
-		channelCanvasContext.fill();
-
-		channelCanvasContext.textAlign = 'center';
-		channelCanvasContext.font = '8px Ubuntu';
-		channelCanvasContext.fillStyle = '#FFF';
-		channelCanvasContext.fillText(channelNo, (barWidth/2), -2);
-
-		channelCanvasContext.closePath();
-		channelCanvasContext.restore();
-	}
-}
-
-function calculateChannelContention() {
-
 	let APsByChannel = {};
 	var max = 0;
 
@@ -169,7 +140,7 @@ function calculateChannelContention() {
 		if (AP.channel <= 0) continue;
 
 		if (typeof APsByChannel[AP.channel] === 'undefined') {
-			APsByChannel[AP.channel] = {'active':{}, 'inactive': {}}
+			APsByChannel[AP.channel] = {'active':[], 'inactive': []}
 		}
 
 		if (AP.active === true) {
@@ -179,20 +150,56 @@ function calculateChannelContention() {
 			APsByChannel[AP.channel].inactive.push(AP);
 		}
 
-		let inactiveAPsCount = Object.keys(APsByChannel[AP.channel].inactive).length;
-		let activeAPsCount = Object.keys(APsByChannel[AP.channel].active).length;
+		let inactiveAPsCount = APsByChannel[AP.channel].inactive.length;
+		let activeAPsCount = APsByChannel[AP.channel].active.length;
 
 		if ((inactiveAPsCount + activeAPsCount) > max) {
 			max = (inactiveAPsCount + activeAPsCount);
 		}
 	}
 
-	var channelContentionPercents = {};
-	for(var channelNo in channelCounter) {
-		channelContentionPercents[channelNo] = Math.round(((channelCounter[channelNo] / max) * 100));
-	}
+	var channelCanvas = document.getElementById('channel-contention');
+	var channelCanvasContext = channelCanvas.getContext('2d');
+	channelCanvasContext.clearRect(0, 0, channelCanvas.width, channelCanvas.height);
 
-	return channelContentionPercents;
+	var barWidth = 14;
+	var barGap = 2;
+
+	for(var channelNo in APsByChannel) {
+
+		const activeAPs = APsByChannel[channelNo].active.length;
+		const inactiveAPs = APsByChannel[channelNo].inactive.length;
+		const APsTotal = (activeAPs+inactiveAPs);
+
+		let channelPercent = ((inactiveAPs+activeAPs) / max) * 100;
+
+		let activePercent = (channelPercent / APsTotal) * activeAPs;
+		let inactivePercent = (channelPercent / APsTotal) * inactiveAPs;
+
+		channelCanvasContext.save();
+		channelCanvasContext.translate(((channelNo-1)*(barWidth+barGap)), 100);
+
+		channelCanvasContext.beginPath();
+			channelCanvasContext.rect(0, 0, barWidth, -(activePercent+10));
+			channelCanvasContext.fillStyle = '#125C6D';
+			channelCanvasContext.fill();
+		channelCanvasContext.closePath();
+
+		channelCanvasContext.beginPath();
+			channelCanvasContext.rect(0, -(activePercent+10), barWidth, -inactivePercent);
+			channelCanvasContext.fillStyle = '#0B343F';
+			channelCanvasContext.fill();
+		channelCanvasContext.closePath();
+
+		channelCanvasContext.beginPath();
+			channelCanvasContext.textAlign = 'center';
+			channelCanvasContext.font = '8px Ubuntu';
+			channelCanvasContext.fillStyle = '#FFF';
+			channelCanvasContext.fillText(channelNo, (barWidth/2), -2);
+		channelCanvasContext.closePath();
+
+		channelCanvasContext.restore();
+	}
 }
 
 function drawAP(AP) {
