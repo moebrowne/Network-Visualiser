@@ -2,6 +2,9 @@ var canvasContainer = document.getElementById('network-container');
 var canvas = document.getElementById('network');
 var canvasContext = canvas.getContext('2d');
 
+var channelCanvas = document.getElementById('channel-contention');
+var channelCanvasContext = channelCanvas.getContext('2d');
+
 function expandCanvasToWindow() {
 	var canvasContainerBoundingRect = canvasContainer.getBoundingClientRect();
 
@@ -130,6 +133,7 @@ function render() {
 }
 
 function renderChannelContention() {
+	channelCanvasContext.clearRect(0, 0, channelCanvas.width, channelCanvas.height);
 
 	let APsByChannel = {};
 	var max = 0;
@@ -157,10 +161,6 @@ function renderChannelContention() {
 			max = (inactiveAPsCount + activeAPsCount);
 		}
 	}
-
-	var channelCanvas = document.getElementById('channel-contention');
-	var channelCanvasContext = channelCanvas.getContext('2d');
-	channelCanvasContext.clearRect(0, 0, channelCanvas.width, channelCanvas.height);
 
 	var barWidth = 14;
 	var barGap = 2;
