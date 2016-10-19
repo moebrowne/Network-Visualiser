@@ -167,7 +167,11 @@ function renderChannelContention() {
 	const barWidth = 14;
 	const barGap = 2;
 
-	for(var channelNo in APsByChannel) {
+	for (var channelNo=1; channelNo <= 13; channelNo++) {
+
+		if (typeof APsByChannel[channelNo] === 'undefined') {
+			APsByChannel[channelNo] = {'active': 0, 'inactive': 0}
+		}
 
 		const activeAPs = APsByChannel[channelNo].active;
 		const inactiveAPs = APsByChannel[channelNo].inactive;
@@ -175,22 +179,22 @@ function renderChannelContention() {
 
 		const channelPercent = (APsTotal / max) * 100;
 
-		const activePercent = (channelPercent / APsTotal) * activeAPs;
-		const inactivePercent = (channelPercent / APsTotal) * inactiveAPs;
+		const activePercent = (channelPercent === 0) ? 0: (channelPercent / APsTotal) * activeAPs * 0.9;
+		const inactivePercent = (channelPercent === 0) ? 0: (channelPercent / APsTotal) * inactiveAPs * 0.9;
 
 		channelCanvasContext.save();
-		channelCanvasContext.translate(((channelNo-1)*(barWidth+barGap)), 100);
+		channelCanvasContext.translate(((channelNo-1)*(barWidth+barGap)), 90);
 
 		// Draw the active APs bar
 		channelCanvasContext.beginPath();
-			channelCanvasContext.rect(0, 0, barWidth, -(activePercent+10));
+			channelCanvasContext.rect(0, 0, barWidth, -(activePercent+1));
 			channelCanvasContext.fillStyle = '#125C6D';
 			channelCanvasContext.fill();
 		channelCanvasContext.closePath();
 
 		// Draw the inactive APs bar
 		channelCanvasContext.beginPath();
-			channelCanvasContext.rect(0, -(activePercent+10), barWidth, -inactivePercent);
+			channelCanvasContext.rect(0, -(activePercent+1), barWidth, -inactivePercent);
 			channelCanvasContext.fillStyle = '#054858';
 			channelCanvasContext.fill();
 		channelCanvasContext.closePath();
@@ -200,7 +204,7 @@ function renderChannelContention() {
 			channelCanvasContext.textAlign = 'center';
 			channelCanvasContext.font = '8px Ubuntu';
 			channelCanvasContext.fillStyle = '#FFF';
-			channelCanvasContext.fillText(channelNo, (barWidth/2), -2);
+			channelCanvasContext.fillText(channelNo, (barWidth/2), 8);
 		channelCanvasContext.closePath();
 
 		channelCanvasContext.restore();
