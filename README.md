@@ -9,7 +9,7 @@ A visual representation of a network
 
 ## AirCrack NG
 
-The network visualiser can use airodump-ng as it's source of data. This is the preferred generator as it will access points along with all associated clients.
+The network visualiser can use airodump-ng as it's source of data. This is the preferred generator as it will show access points along with all associated clients.
 
 To run the Airodump generator run the following command:
 
