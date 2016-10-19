@@ -138,6 +138,7 @@ function renderChannelContention() {
 	let APsByChannel = {};
 	var max = 0;
 
+	// Count the number of active and inactive APs in each channel
 	for(var APMac in APs) {
 		const AP = APs[APMac];
 
@@ -180,18 +181,21 @@ function renderChannelContention() {
 		channelCanvasContext.save();
 		channelCanvasContext.translate(((channelNo-1)*(barWidth+barGap)), 100);
 
+		// Draw the active APs bar
 		channelCanvasContext.beginPath();
 			channelCanvasContext.rect(0, 0, barWidth, -(activePercent+10));
 			channelCanvasContext.fillStyle = '#125C6D';
 			channelCanvasContext.fill();
 		channelCanvasContext.closePath();
 
+		// Draw the inactive APs bar
 		channelCanvasContext.beginPath();
 			channelCanvasContext.rect(0, -(activePercent+10), barWidth, -inactivePercent);
 			channelCanvasContext.fillStyle = '#054858';
 			channelCanvasContext.fill();
 		channelCanvasContext.closePath();
 
+		// Draw the bar label
 		channelCanvasContext.beginPath();
 			channelCanvasContext.textAlign = 'center';
 			channelCanvasContext.font = '8px Ubuntu';
