@@ -160,18 +160,30 @@ function renderChannelContention() {
 
 function calculateChannelContention() {
 
-	let channelCounter = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,12:0,13:0};
+	let APsByChannel = {};
 	var max = 0;
 
 	for(var APMac in APs) {
 		let AP = APs[APMac];
 
-		if (AP.channel > 0) {
-			channelCounter[AP.channel]++;
+		if (AP.channel <= 0) continue;
 
-			if (channelCounter[AP.channel] > max) {
-				max = channelCounter[AP.channel];
-			}
+		if (typeof APsByChannel[AP.channel] === 'undefined') {
+			APsByChannel[AP.channel] = {'active':{}, 'inactive': {}}
+		}
+
+		if (AP.active === true) {
+			APsByChannel[AP.channel].active.push(AP);
+		}
+		else {
+			APsByChannel[AP.channel].inactive.push(AP);
+		}
+
+		let inactiveAPsCount = Object.keys(APsByChannel[AP.channel].inactive).length;
+		let activeAPsCount = Object.keys(APsByChannel[AP.channel].active).length;
+
+		if ((inactiveAPsCount + activeAPsCount) > max) {
+			max = (inactiveAPsCount + activeAPsCount);
 		}
 	}
 
