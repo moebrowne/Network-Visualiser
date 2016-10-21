@@ -9,13 +9,20 @@ var wirelessAP = require('./wirelessAP');
 var wirelessClient = require('./wirelessClient');
 
 var interfaceName = process.argv[2];
-
-fs.readFile('whitelist.json', {encoding: 'utf-8'}, function(err, data) {
+fs.stat('whitelist.json', (err, stat) => {
 	if (err) {
-		console.error('ERR' + err);
+		console.error('ERR: ' + err.code);
 		return;
 	}
-	whitelist = JSON.parse(data);
+
+	fs.readFile('whitelist.json', {encoding: 'utf-8'}, function(err, data) {
+		if (err) {
+			console.error('ERR: ' + err);
+			return;
+		}
+
+		whitelist = JSON.parse(data);
+	});
 });
 
 var APs = {};
@@ -122,5 +129,5 @@ io.on('connection', function(socket) {
 	}
 	socket.emit('clients', clientNodeData);
 
-	//socket.emit('whitelist', whitelist);
+	socket.emit('whitelist', whitelist);
 });
