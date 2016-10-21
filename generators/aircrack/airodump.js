@@ -3,14 +3,35 @@
 var io = require('socket.io')(3000);
 var es = require('event-stream');
 var spawn = require('child_process').spawn;
+var fs = require('fs');
 
 var wirelessAP = require('./wirelessAP');
 var wirelessClient = require('./wirelessClient');
 
 var interfaceName = process.argv[2];
+fs.stat('whitelist.json', (err, stat) => {
+	if (err) {
+		console.error(err.toString());
+		return;
+	}
+
+	fs.readFile('whitelist.json', {encoding: 'utf-8'}, function(err, data) {
+		if (err) {
+			console.error(err.toString());
+			return;
+		}
+
+		whitelist = JSON.parse(data);
+	});
+});
 
 var APs = {};
 var clients = {};
+
+var whitelist = {
+	"APs": [],
+	"clients": []
+};
 
 var airodump = spawn('airodump-ng', [interfaceName, '--berlin', '1']);
 
@@ -107,4 +128,6 @@ io.on('connection', function(socket) {
 		clientNodeData[clientMacAddr] = clients[clientMacAddr].nodeData;
 	}
 	socket.emit('clients', clientNodeData);
+
+	socket.emit('whitelist', whitelist);
 });
