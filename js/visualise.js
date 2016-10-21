@@ -1,3 +1,9 @@
+
+var whitelist = {
+	"APs": [],
+	"clients": []
+};
+
 var canvasContainer = document.getElementById('network-container');
 var canvas = document.getElementById('network');
 var canvasContext = canvas.getContext('2d');
@@ -222,6 +228,11 @@ function drawAP(AP) {
 		nodeStrokeColour = '#550000';
 	}
 
+	var APFillStyle = '#333';
+	if (whitelist.APs.indexOf(AP.mac) !== -1) {
+		APFillStyle = '#454';
+	}
+
 	// Draw the node
 	canvasContext.save();
 	canvasContext.beginPath();
@@ -231,7 +242,7 @@ function drawAP(AP) {
 	canvasContext.arc(0, 0, AP.size, 0, toRadians(360), true);
 	canvasContext.strokeStyle = nodeStrokeColour;
 	canvasContext.stroke();
-	canvasContext.fillStyle = '#333';
+	canvasContext.fillStyle = APFillStyle;
 	canvasContext.fill();
 	canvasContext.closePath();
 	canvasContext.restore();
@@ -303,6 +314,11 @@ function drawAPClients(AP) {
 			nodeColour = '#777777';
 		}
 
+		var clientFillStyle = '#333';
+		if (whitelist.clients.indexOf(client.mac) !== -1) {
+			clientFillStyle = '#454';
+		}
+
 		var w = client.size;
 		var h = w * (Math.sqrt(3)/2);
 
@@ -317,7 +333,7 @@ function drawAPClients(AP) {
 		canvasContext.lineTo(-w / 2, h / 3);
 		canvasContext.closePath();
 		canvasContext.stroke();
-		canvasContext.fillStyle = '#333';
+		canvasContext.fillStyle = clientFillStyle;
 		canvasContext.fill();
 		canvasContext.restore();
 	}
