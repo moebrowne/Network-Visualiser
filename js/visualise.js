@@ -1,8 +1,5 @@
 
-var whitelist = {
-	"APs": [],
-	"clients": []
-};
+var whitelist = {};
 
 var canvasContainer = document.getElementById('network-container');
 var canvas = document.getElementById('network');
@@ -229,7 +226,7 @@ function drawAP(AP) {
 	}
 
 	var APFillStyle = '#333';
-	if (whitelist.APs.indexOf(AP.mac) !== -1) {
+	if (typeof whitelist.APs !== "undefined" && whitelist.APs.indexOf(AP.mac) !== -1) {
 		APFillStyle = '#454';
 	}
 
@@ -315,7 +312,7 @@ function drawAPClients(AP) {
 		}
 
 		var clientFillStyle = '#333';
-		if (whitelist.clients.indexOf(client.mac) !== -1) {
+		if (typeof whitelist.clients !== "undefined" && whitelist.clients.indexOf(client.mac) !== -1) {
 			clientFillStyle = '#454';
 		}
 
