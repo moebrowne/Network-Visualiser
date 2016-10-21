@@ -26,6 +26,10 @@ var clients = {};
 
 var socket = io('//:3000');
 
+socket.on('whitelist', function (whitelistUpdate) {
+	whitelist = whitelistUpdate;
+});
+
 // A bulk update of APs
 socket.on('APs', function(currentAPs) {
 	for (var APMac in currentAPs) {
