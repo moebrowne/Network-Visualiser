@@ -11,13 +11,13 @@ var wirelessClient = require('./wirelessClient');
 var interfaceName = process.argv[2];
 fs.stat('whitelist.json', (err, stat) => {
 	if (err) {
-		console.error('ERR: ' + err.code);
+		console.error(err.toString());
 		return;
 	}
 
 	fs.readFile('whitelist.json', {encoding: 'utf-8'}, function(err, data) {
 		if (err) {
-			console.error('ERR: ' + err);
+			console.error(err.toString());
 			return;
 		}
 
