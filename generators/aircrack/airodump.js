@@ -9,6 +9,11 @@ var wirelessAP = require('./wirelessAP');
 var wirelessClient = require('./wirelessClient');
 
 var interfaceName = process.argv[2];
+
+if (typeof interfaceName === 'undefined') {
+	throw new Error('Interface name missing');
+}
+
 fs.stat('whitelist.json', (err, stat) => {
 	if (err) {
 		console.error(err.toString());
