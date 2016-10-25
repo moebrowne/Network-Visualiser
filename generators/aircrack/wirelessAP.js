@@ -23,8 +23,14 @@ class wirelessAP
 		}
 	};
 
-	constructor() {
-		this.seenFirst = Date.now()/1000;
+	constructor(data) {
+		// Check if we are loading an existing AP or if this is a new one
+		if (typeof data === 'undefined') {
+			this.seenFirst = Date.now()/1000;
+			return;
+		}
+
+		this.load(data);
 	}
 
 	update(data) {
@@ -56,6 +62,12 @@ class wirelessAP
 		}
 
 		this.lastUpdateChangedNodeData = this.isDifferentTo(prevNodeData);
+	}
+
+	load(data) {
+		for (var prop in data) {
+			this[prop] = data[prop];
+		}
 	}
 
 	isDifferentTo(nodeDataCompare) {
