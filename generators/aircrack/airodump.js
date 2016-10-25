@@ -196,12 +196,12 @@ io.on('connection', function(socket) {
 function saveData() {
 	fs.writeFile(APCacheFile, JSON.stringify(APs), (err) => {
 		if (err) {
-			console.error(err.toString());
+			console.error(`x Failed to write AP cache (${err.message})`);
 		}
 	});
 	fs.writeFile(clientCacheFile, JSON.stringify(clients), (err) => {
 		if (err) {
-			console.error(err.toString());
+			console.error(`x Failed to write client cache (${err.message})`);
 		}
 	});
 }
