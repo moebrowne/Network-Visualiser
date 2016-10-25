@@ -14,6 +14,11 @@ if (typeof interfaceName === 'undefined') {
 	throw new Error('Interface name missing');
 }
 
+var whitelist = {
+	"APs": [],
+	"clients": []
+};
+
 fs.stat('whitelist.json', (err, stat) => {
 	if (err) {
 		console.error(err.toString());
@@ -78,12 +83,6 @@ fs.stat(clientCacheFile, (err, stat) => {
 		console.log(`+ Loaded ${Object.keys(clientData).length} clients`);
 	});
 });
-
-
-var whitelist = {
-	"APs": [],
-	"clients": []
-};
 
 var airodumpProcess = spawn('airodump-ng', [interfaceName, '--berlin', '1']);
 
