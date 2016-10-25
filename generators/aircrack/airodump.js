@@ -140,3 +140,18 @@ io.on('connection', function(socket) {
 
 	socket.emit('whitelist', whitelist);
 });
+
+function saveData() {
+	fs.writeFile('APs.json', JSON.stringify(APs), (err) => {
+		if (err) {
+			console.error(err.toString());
+		}
+	});
+	fs.writeFile('clients.json', JSON.stringify(clients), (err) => {
+		if (err) {
+			console.error(err.toString());
+		}
+	});
+}
+
+setInterval(saveData, 5000);
