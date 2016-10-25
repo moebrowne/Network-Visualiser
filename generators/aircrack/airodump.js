@@ -34,13 +34,14 @@ var APs = {};
 var clients = {};
 
 // Load saved APs from disk
-fs.stat('APs.json', (err, stat) => {
+const APCacheFile = 'APs.json';
+fs.stat(APCacheFile, (err, stat) => {
 	if (err) {
 		console.warn(`? No AP cache found, skipping...`);
 		return;
 	}
 
-	fs.readFile('APs.json', (err, APsDataJSON) => {
+	fs.readFile(APCacheFile, (err, APsDataJSON) => {
 		if (err) {
 			console.error(`x Failed to load APs from cache (${err.message})`);
 			return;
@@ -56,13 +57,14 @@ fs.stat('APs.json', (err, stat) => {
 });
 
 // Load saved clients from disk
-fs.stat('clients.json', (err, stat) => {
+const clientCacheFile = 'clients.json';
+fs.stat(clientCacheFile, (err, stat) => {
 	if (err) {
 		console.warn(`? No client cache found, skipping...`);
 		return;
 	}
 
-	fs.readFile('clients.json', (err, clientDataJSON) => {
+	fs.readFile(clientCacheFile, (err, clientDataJSON) => {
 		if (err) {
 			console.warn(`x Failed to load clients from cache (${err.message})`);
 			return;
