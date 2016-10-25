@@ -168,7 +168,11 @@ updateExistingNodes();
 
 
 io.on('connection', function(socket) {
-	console.log('User connected');
+	console.log(`+ Socket connect [${socket.id}]`);
+
+	socket.on('disconnect', function() {
+		console.log(`- Socket disconnect [${socket.id}]`);
+	});
 
 	// Get all the AP node data
 	let APNodeData = {};
