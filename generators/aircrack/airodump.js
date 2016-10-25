@@ -38,10 +38,14 @@ var whitelist = {
 	"clients": []
 };
 
-var airodump = spawn('airodump-ng', [interfaceName, '--berlin', '1']);
+var airodumpProcess = spawn('airodump-ng', [interfaceName, '--berlin', '1']);
+
+airodumpProcess.on('exit', (code, signal) => {
+	console.error('ERR: Airodump exited!');
+});
 
 es.pipeline(
-	airodump.stderr,
+	airodumpProcess.stderr,
 	es.split(),
 	es.map(function (line) {
 		var lineTrimmed = line.trim();
