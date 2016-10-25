@@ -21,17 +21,19 @@ var whitelist = {
 
 fs.stat('whitelist.json', (err, stat) => {
 	if (err) {
-		console.error(err.toString());
+		console.warn(`? No whitelist found, skipping...`);
 		return;
 	}
 
-	fs.readFile('whitelist.json', {encoding: 'utf-8'}, function(err, data) {
+	fs.readFile('whitelist.json', {encoding: 'utf-8'}, function(err, whitelistJSON) {
 		if (err) {
-			console.error(err.toString());
+			console.error(`x Failed to load whitelist from cache (${err.message})`);
 			return;
 		}
 
-		whitelist = JSON.parse(data);
+		whitelist = JSON.parse(whitelistJSON);
+
+		console.log(`+ Loaded whitelist (${whitelist.APs.length} APs, ${whitelist.clients.length} clients)`);
 	});
 });
 
