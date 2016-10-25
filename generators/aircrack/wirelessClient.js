@@ -20,8 +20,14 @@ class wirelessClient
 		}
 	};
 
-	constructor() {
-		this.seenFirst = Date.now()/1000;
+	constructor(data) {
+		// Check if we are loading an existing client or if this is a new one
+		if (typeof data === 'undefined') {
+			this.seenFirst = Date.now()/1000;
+			return;
+		}
+
+		this.load(data);
 	}
 
 	update(data) {
@@ -49,6 +55,12 @@ class wirelessClient
 		}
 
 		this.lastUpdateChangedNodeData = this.isDifferentTo(prevNodeData);
+	}
+
+	load(data) {
+		for (var prop in data) {
+			this[prop] = data[prop];
+		}
 	}
 
 	isDifferentTo(nodeDataCompare) {

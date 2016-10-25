@@ -33,6 +33,53 @@ fs.stat('whitelist.json', (err, stat) => {
 var APs = {};
 var clients = {};
 
+// Load saved APs from disk
+const APCacheFile = 'APs.json';
+fs.stat(APCacheFile, (err, stat) => {
+	if (err) {
+		console.warn(`? No AP cache found, skipping...`);
+		return;
+	}
+
+	fs.readFile(APCacheFile, (err, APsDataJSON) => {
+		if (err) {
+			console.error(`x Failed to load APs from cache (${err.message})`);
+			return;
+		}
+
+		const APsData = JSON.parse(APsDataJSON);
+		for (var APMAC in APsData) {
+			APs[APMAC] = new wirelessAP(APsData[APMAC]);
+		}
+
+		console.log(`+ Loaded ${Object.keys(APsData).length} APs`);
+	});
+});
+
+// Load saved clients from disk
+const clientCacheFile = 'clients.json';
+fs.stat(clientCacheFile, (err, stat) => {
+	if (err) {
+		console.warn(`? No client cache found, skipping...`);
+		return;
+	}
+
+	fs.readFile(clientCacheFile, (err, clientDataJSON) => {
+		if (err) {
+			console.warn(`x Failed to load clients from cache (${err.message})`);
+			return;
+		}
+
+		const clientData = JSON.parse(clientDataJSON);
+		for (var clientMAC in clientData) {
+			clients[clientMAC] = new wirelessClient(clientData[clientMAC]);
+		}
+
+		console.log(`+ Loaded ${Object.keys(clientData).length} clients`);
+	});
+});
+
+
 var whitelist = {
 	"APs": [],
 	"clients": []
@@ -140,3 +187,18 @@ io.on('connection', function(socket) {
 
 	socket.emit('whitelist', whitelist);
 });
+
+function saveData() {
+	fs.writeFile('APs.json', JSON.stringify(APs), (err) => {
+		if (err) {
+			console.error(err.toString());
+		}
+	});
+	fs.writeFile('clients.json', JSON.stringify(clients), (err) => {
+		if (err) {
+			console.error(err.toString());
+		}
+	});
+}
+
+setInterval(saveData, 5000);
