@@ -59,7 +59,7 @@ fs.stat(APCacheFile, (err, stat) => {
 			APs[APMAC] = new wirelessAP(APsData[APMAC]);
 		}
 
-		console.log(`+ Loaded ${Object.keys(APsData).length} APs`);
+		console.log(`+ Loaded ${Object.keys(APsData).length} APs from cache`);
 	});
 });
 
@@ -82,7 +82,7 @@ fs.stat(clientCacheFile, (err, stat) => {
 			clients[clientMAC] = new wirelessClient(clientData[clientMAC]);
 		}
 
-		console.log(`+ Loaded ${Object.keys(clientData).length} clients`);
+		console.log(`+ Loaded ${Object.keys(clientData).length} clients from cache`);
 	});
 });
 
