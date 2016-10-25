@@ -33,6 +33,51 @@ fs.stat('whitelist.json', (err, stat) => {
 var APs = {};
 var clients = {};
 
+// Load saved APs from disk
+fs.stat('APs.json', (err, stat) => {
+	if (err) {
+		console.warn(`? No AP cache found, skipping...`);
+		return;
+	}
+
+	fs.readFile('APs.json', (err, APsDataJSON) => {
+		if (err) {
+			console.error(`x Failed to load APs from cache (${err.message})`);
+			return;
+		}
+
+		const APsData = JSON.parse(APsDataJSON);
+		for (var APMAC in APsData) {
+			APs[APMAC] = new wirelessAP(APsData[APMAC]);
+		}
+
+		console.log(`+ Loaded ${Object.keys(APsData).length} APs`);
+	});
+});
+
+// Load saved clients from disk
+fs.stat('clients.json', (err, stat) => {
+	if (err) {
+		console.warn(`? No client cache found, skipping...`);
+		return;
+	}
+
+	fs.readFile('clients.json', (err, clientDataJSON) => {
+		if (err) {
+			console.warn(`x Failed to load clients from cache (${err.message})`);
+			return;
+		}
+
+		const clientData = JSON.parse(clientDataJSON);
+		for (var clientMAC in clientData) {
+			clients[clientMAC] = new wirelessClient(clientData[clientMAC]);
+		}
+
+		console.log(`+ Loaded ${Object.keys(clientData).length} clients`);
+	});
+});
+
+
 var whitelist = {
 	"APs": [],
 	"clients": []
