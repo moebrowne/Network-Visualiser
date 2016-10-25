@@ -188,12 +188,12 @@ io.on('connection', function(socket) {
 });
 
 function saveData() {
-	fs.writeFile('APs.json', JSON.stringify(APs), (err) => {
+	fs.writeFile(APCacheFile, JSON.stringify(APs), (err) => {
 		if (err) {
 			console.error(err.toString());
 		}
 	});
-	fs.writeFile('clients.json', JSON.stringify(clients), (err) => {
+	fs.writeFile(clientCacheFile, JSON.stringify(clients), (err) => {
 		if (err) {
 			console.error(err.toString());
 		}
