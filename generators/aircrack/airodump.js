@@ -200,6 +200,5 @@ function saveData() {
 			console.error(err.toString());
 		}
 	});
-	setTimeout(saveData, 5000);
 }
-saveData();
+setInterval(saveData, 5000);
