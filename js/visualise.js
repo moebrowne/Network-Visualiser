@@ -85,6 +85,8 @@ function addClient(clientData) {
 		clients[clientData.mac] = clientData;
 	}
 
+	var clientDataOld = clients[clientData.mac];
+
 	// Update the client
 	var packetAnimOffset = clients[clientData.mac].packetAnimOffset;
 	if (typeof APs[clientData.APMac] !== "undefined" && clientData.packetsFlowing === true && clients[clientData.mac].packetAnimOffset === 0) {
@@ -96,7 +98,14 @@ function addClient(clientData) {
 
 	// Check if the client is associated
 	if (typeof clientData.APMac !== "undefined") {
-		if (typeof APs[clientData.APMac] !== "undefined") {
+
+		// Has the client associated with a new AP?
+		if (clientDataOld.APMac !== clientData.APMac && typeof clientDataOld.APMac !== 'undefined') {
+			// Remove client reference from the previous AP
+			delete APs[clientDataOld.APMac].clients[clientData.mac];
+		}
+
+		if (typeof APs[clientData.APMac] !== "undefined" && typeof APs[clientData.APMac].clients[clientData.mac] === 'undefined') {
 			// Add cross references to the AP and client
 			APs[clientData.APMac].clients[clientData.mac] = clients[clientData.mac];
 		}
