@@ -112,8 +112,8 @@ function addClient(clientData) {
 	}
 	else {
 		// Remove any references (if a client disassociates)
-		if (typeof APs[clientData.APMac] !== "undefined") {
-			delete APs[clientData.APMac].clients[clientData.mac];
+		if (typeof APs[clientDataOld.APMac] !== "undefined") {
+			delete APs[clientDataOld.APMac].clients[clientData.mac];
 		}
 	}
 }
