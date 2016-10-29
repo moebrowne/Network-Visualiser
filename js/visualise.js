@@ -307,7 +307,12 @@ function drawAPPowerRing(AP) {
 
 function drawAPClients(AP) {
 
-	var clientCount = Object.keys(AP.clients).length;
+
+	var APClientsFiltered = Object.filter(AP.clients, function(client) {
+		return client.active === true
+	});
+
+	var clientCount = Object.keys(APClientsFiltered).length;
 
 	if (clientCount === 0) {
 		return;
@@ -317,7 +322,7 @@ function drawAPClients(AP) {
 	var angleDeg = (360 / clientCount);
 
 	var i = 0;
-	for (var clientMac in AP.clients) {
+	for (var clientMac in APClientsFiltered) {
 
 		var client = AP.clients[clientMac];
 		var angle = (angleDeg * i++) - 90;
