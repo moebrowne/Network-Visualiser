@@ -154,11 +154,12 @@ function render() {
 			drawAPPowerRing(AP);
 		}
 	}
-	renderChannelContention();
+
+	renderChannelContention(APsFiltered);
 
 }
 
-function renderChannelContention() {
+function renderChannelContention(APs) {
 	channelCanvasContext.clearRect(0, 0, channelCanvas.width, channelCanvas.height);
 
 	let APsByChannel = {};
