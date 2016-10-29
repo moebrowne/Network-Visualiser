@@ -118,6 +118,18 @@ function addClient(clientData) {
 	}
 }
 
+Object.filter = function(obj, predicate) {
+	var result = {};
+
+	for (var key in obj) {
+		if (obj.hasOwnProperty(key) && predicate(obj[key])) {
+			result[key] = obj[key];
+		}
+	}
+
+	return result;
+};
+
 function draw() {
 	requestAnimationFrame(draw);
 	render();
@@ -128,14 +140,12 @@ draw();
 function render() {
 	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
+	var APsFiltered = Object.filter(APs, function(AP) {
+		return AP.active === true && Object.keys(AP.clients).length > 0
+	});
 
-	for (var APMac in APs) {
+	for (var APMac in APsFiltered) {
 		var AP = APs[APMac];
-
-		if (Object.keys(AP.clients).length === 0) {
-			// Show only APs with connected clients
-			//continue;
-		}
 
 		drawAPClients(AP);
 		drawAP(AP);
