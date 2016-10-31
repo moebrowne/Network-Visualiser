@@ -265,6 +265,8 @@ function drawAP(AP) {
 	canvasContext.stroke();
 	canvasContext.fillStyle = APFillStyle;
 	canvasContext.fill();
+	canvasContext.fillStyle = '#FFF';
+	canvasContext.fillText(AP.SSID,10,10);
 	canvasContext.closePath();
 	canvasContext.restore();
 
