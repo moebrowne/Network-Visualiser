@@ -141,7 +141,7 @@ function render() {
 	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
 	var APsFiltered = Object.filter(APs, function(AP) {
-		return AP.active === true && Object.keys(AP.clients).length > 0
+		return AP.active === true;
 	});
 
 	for (var APMac in APsFiltered) {
@@ -311,7 +311,7 @@ function drawAPClients(AP) {
 
 
 	var APClientsFiltered = Object.filter(AP.clients, function(client) {
-		return client.active === true
+		return client.active === true;
 	});
 
 	var clientCount = Object.keys(APClientsFiltered).length;
@@ -361,6 +361,8 @@ function drawAPClients(AP) {
 		canvasContext.lineTo(-w / 2, h / 3);
 		canvasContext.closePath();
 		canvasContext.stroke();
+		canvasContext.fillStyle = '#FFF';
+		canvasContext.fillText(client.mac,10,10);
 		canvasContext.fillStyle = clientFillStyle;
 		canvasContext.fill();
 		canvasContext.restore();
