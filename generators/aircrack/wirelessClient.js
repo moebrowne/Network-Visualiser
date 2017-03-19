@@ -24,6 +24,7 @@ class wirelessClient
 		// Check if we are loading an existing client or if this is a new one
 		if (typeof data === 'undefined') {
 			this.seenFirst = Date.now()/1000;
+			this.activeLast = Date.now()/1000;
 			return;
 		}
 
@@ -55,6 +56,7 @@ class wirelessClient
 		}
 
 		this.lastUpdateChangedNodeData = this.isDifferentTo(prevNodeData);
+		this.activeLast = this.lastUpdateChangedNodeData ? Date.now()/1000:this.activeLast;
 	}
 
 	load(data) {
@@ -87,6 +89,7 @@ class wirelessClient
 			'mac': this.mac,
 			'APMac': this.APMac,
 			'active': this.active,
+			'activeLast': this.activeLast,
 			'packets': this.packets,
 			'packetsFlowing': this.packetsFlowing,
 			'power': this.power,
