@@ -361,8 +361,6 @@ function drawAPClients(AP) {
 		canvasContext.lineTo(-w / 2, h / 3);
 		canvasContext.closePath();
 		canvasContext.stroke();
-		canvasContext.fillStyle = '#FFF';
-		canvasContext.fillText(client.mac,10,10);
 		canvasContext.fillStyle = clientFillStyle;
 		canvasContext.fill();
 		canvasContext.restore();
