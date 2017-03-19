@@ -39,7 +39,7 @@ class wirelessClient
 		this.seenLast = Date.now()/1000;
 		this.active = true;
 		this.power = parseInt(data[self.regexGroups.Power]);
-		this.packets = parseInt(data[self.regexGroups.Packets]);
+		this.packets += parseInt(data[self.regexGroups.Packets])+parseInt(data[self.regexGroups.PacketsLost]);
 		this.packetsFlowing = this.packets > prevNodeData.packets;
 		this.probedAPs = [];
 
