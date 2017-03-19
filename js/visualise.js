@@ -105,8 +105,8 @@ function addClient(clientData) {
 			delete APs[clientDataOld.APMac].clients[clientData.mac];
 		}
 
-		if (typeof APs[clientData.APMac] !== "undefined" && typeof APs[clientData.APMac].clients[clientData.mac] === 'undefined') {
-			// Add cross references to the AP and client
+		if (typeof APs[clientData.APMac] !== "undefined") {
+			// Update the data held in the client
 			APs[clientData.APMac].clients[clientData.mac] = clients[clientData.mac];
 		}
 	}
